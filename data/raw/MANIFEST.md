@@ -56,3 +56,20 @@ Columns: `ceremony_number`, `year`, `date`, `url`, `category`, `winner`, `nomine
 
 Columns: `tconst`, `tmdb_id`, `overview`, `tagline`, `release_date`, `original_language`, `keywords`,
 `production_countries`, `budget`, `revenue`, `tmdb_vote_average`, `tmdb_vote_count`, `error`.
+
+## 4. Frozen IMDb snapshot (access route)
+
+The exact IMDb files used for this analysis (downloaded 2026-10-29) are stored in a restricted Google Drive folder:
+https://drive.google.com/drive/folders/15Rz_IXv0CU0vK-8-ibrAYuh-LMXD618J?usp=drive_link
+
+Download the 5 files into `data/raw/imdb/` and verify them with `shasum -a 256 data/raw/imdb/*.tsv.gz`:
+
+| File | sha256 |
+|---|---|
+| name.basics.tsv.gz | 918058b340241405b9d928b3704f0cc595854491ed829f19918c367619ee0922 |
+| title.basics.tsv.gz | 653446629ce2665fde23610570555a0f451ded324ce26e2aaed08ba086b34400 |
+| title.crew.tsv.gz | 55c5434f0c5526cba762b8d632e40274c7894aea1d8102c7dbd9d4253203b559 |
+| title.principals.tsv.gz | 47cf4230606389da16682dd337e195a4541998c6936b09baf95d1c6f8e1d0439 |
+| title.ratings.tsv.gz | 1db8e7365a5ecbedbf4218869a28d85fd7a492b5d5f417162909094e807d55b3 |
+
+A fresh download is also possible with `uv run python -m oscars.collect.imdb_download`, but it returns the current IMDb version, so votes and ratings (and therefore results) can differ slightly.
