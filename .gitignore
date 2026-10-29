@@ -1,0 +1,49 @@
+# Fichiers IMDb trop volumineux (~10 Go)
+Data/Raw/IMDb/
+
+# Processed data (genere par les notebooks, non commite)
+Data/Processed/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Environment
+.env
+
+# Claude
+tasks/.claude/
+.claude/
+INSTRUCTIONS_CLAUDE_CODE_PHASE4.md
+
+# Backups
+.nb_backup/
+ORCHESTRATOR.md
+
+# Data Foundations
+data/raw/imdb/*.tsv
+data/raw/imdb/*.tsv.gz
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# Explicit lowercase rules (the Data/Raw/IMDb/ rule above only matches on case-insensitive filesystems)
+data/raw/imdb/
+scratch/
