@@ -48,3 +48,13 @@ and Keira Chang (Oscar nomination prediction from IMDb and TMDb data).
 This product uses the TMDb API but is not endorsed or certified by TMDb.
 Information courtesy of IMDb (https://www.imdb.com), used with permission under the non-commercial license.
 Oscar nominations data from Wikipedia, licensed under CC BY-SA 4.0.
+
+## IMDb frozen snapshot
+
+IMDb files are too large for GitHub and cannot be redistributed publicly. The exact files used are in a restricted Google Drive folder:
+https://drive.google.com/drive/folders/15Rz_IXv0CU0vK-8-ibrAYuh-LMXD618J?usp=drive_link
+
+Place them in `data/raw/imdb/` before running the pipeline. Checksums and details: `data/raw/MANIFEST.md`, section 4.
+
+Information courtesy of IMDb (https://www.imdb.com). Used with permission.
+This product uses the TMDb API but is not endorsed or certified by TMDb.
