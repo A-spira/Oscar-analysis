@@ -1,0 +1,1056 @@
+{
+  "checks": [
+    {
+      "step": "clean",
+      "check": "category_normalisation",
+      "labels_raw": 119,
+      "labels_without_footnotes": 114,
+      "labels_clean": 92
+    },
+    {
+      "step": "clean",
+      "check": "table",
+      "table": "oscars_raw",
+      "grain": "1 category x ceremony (winner + ' | '-joined nominees)",
+      "key": [
+        "year",
+        "category_clean"
+      ],
+      "rows": 2194,
+      "key_unique": false,
+      "duplicate_keys": 26,
+      "dtypes": {
+        "date": "str",
+        "winner": "string",
+        "nominees": "string"
+      },
+      "na_pct": {
+        "date": 0.0,
+        "winner": 0.0,
+        "nominees": 0.5
+      }
+    },
+    {
+      "step": "clean",
+      "check": "table",
+      "table": "nominations",
+      "grain": "1 nominee x category x ceremony (all years)",
+      "key": [
+        "year",
+        "category",
+        "nominee"
+      ],
+      "rows": 10737,
+      "key_unique": false,
+      "duplicate_keys": 8,
+      "dtypes": {
+        "nominee": "str",
+        "winner": "bool"
+      },
+      "na_pct": {
+        "nominee": 0.0,
+        "winner": 0.0
+      }
+    },
+    {
+      "step": "clean",
+      "check": "duplicates",
+      "table": "nominations",
+      "rows_in_duplicate_groups": 15,
+      "examples": [
+        [
+          "1929",
+          "Best Engineering Effects",
+          "No specific film"
+        ],
+        [
+          "1929",
+          "Best Engineering Effects",
+          "No specific film"
+        ],
+        [
+          "1930",
+          "Best Directing",
+          "Frank Lloyd"
+        ],
+        [
+          "1930",
+          "Best Directing",
+          "Frank Lloyd"
+        ],
+        [
+          "1930",
+          "Best Directing",
+          "Frank Lloyd"
+        ],
+        [
+          "1931",
+          "Best Directing",
+          "Clarence Brown"
+        ],
+        [
+          "1931",
+          "Best Directing",
+          "Clarence Brown"
+        ],
+        [
+          "1931",
+          "Best Actor in a Leading Role",
+          "George Arliss"
+        ],
+        [
+          "1931",
+          "Best Actor in a Leading Role",
+          "George Arliss"
+        ],
+        [
+          "1931",
+          "Best Actress in a Leading Role",
+          "Norma Shearer"
+        ]
+      ],
+      "decision": "kept: a person can be nominated twice in one category for two films (e.g. 1930s directors)"
+    },
+    {
+      "step": "clean",
+      "check": "winners_per_category",
+      "groups": 2168,
+      "groups_with_not_exactly_one": 26
+    },
+    {
+      "step": "clean",
+      "check": "detailed_scrape_consistency",
+      "rows_detailed": 10737,
+      "rows_from_csv": 10737,
+      "differing_keys": 0,
+      "person_nominations_2000plus": 675,
+      "with_film": 675
+    },
+    {
+      "step": "clean",
+      "check": "join",
+      "join": "movies <- title.ratings",
+      "key": [
+        "tconst"
+      ],
+      "relation": "1-1",
+      "rows_before": 410818,
+      "rows_after": 410818,
+      "right_rows": 1726786,
+      "right_key_unique": true,
+      "matched": 230167,
+      "unmatched": 180651,
+      "match_rate_pct": 56.03
+    },
+    {
+      "step": "clean",
+      "check": "join",
+      "join": "movies <- title.crew",
+      "key": [
+        "tconst"
+      ],
+      "relation": "1-1",
+      "rows_before": 410818,
+      "rows_after": 410818,
+      "right_rows": 410818,
+      "right_key_unique": true,
+      "matched": 410818,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "clean",
+      "check": "imdb_filter",
+      "title_basics_rows": 12907853,
+      "movies_kept": 410818,
+      "min_start_year": 1995
+    },
+    {
+      "step": "clean",
+      "check": "table",
+      "table": "imdb_movies",
+      "grain": "1 IMDb movie (titleType=movie, isAdult=0, startYear>=1995)",
+      "key": [
+        "tconst"
+      ],
+      "rows": 410818,
+      "key_unique": true,
+      "duplicate_keys": 0,
+      "dtypes": {
+        "primaryTitle": "str",
+        "startYear": "Int16",
+        "runtimeMinutes": "Int32",
+        "genres": "str",
+        "averageRating": "Float32",
+        "numVotes": "Int32",
+        "directors": "str"
+      },
+      "na_pct": {
+        "primaryTitle": 0.0,
+        "startYear": 0.0,
+        "runtimeMinutes": 21.28,
+        "genres": 5.56,
+        "averageRating": 43.97,
+        "numVotes": 43.97,
+        "directors": 4.77
+      }
+    },
+    {
+      "step": "clean",
+      "check": "table",
+      "table": "imdb_principals",
+      "grain": "1 credited person x movie (billing position)",
+      "key": [
+        "tconst",
+        "ordering"
+      ],
+      "rows": 5189929,
+      "key_unique": true,
+      "duplicate_keys": 0,
+      "dtypes": {
+        "nconst": "str",
+        "category": "category"
+      },
+      "na_pct": {
+        "nconst": 0.0,
+        "category": 0.0
+      }
+    },
+    {
+      "step": "clean",
+      "check": "table",
+      "table": "imdb_names",
+      "grain": "1 IMDb person",
+      "key": [
+        "nconst"
+      ],
+      "rows": 1864790,
+      "key_unique": true,
+      "duplicate_keys": 0,
+      "dtypes": {
+        "primaryName": "str"
+      },
+      "na_pct": {
+        "primaryName": 0.0
+      }
+    },
+    {
+      "step": "clean",
+      "check": "tmdb_source",
+      "file": "tmdb_cache.parquet",
+      "rows": 1182,
+      "errors": 16
+    },
+    {
+      "step": "clean",
+      "check": "tmdb_source",
+      "file": "tmdb_universe_cache.parquet",
+      "rows": 7985,
+      "errors": 0
+    },
+    {
+      "step": "clean",
+      "check": "zero_to_na",
+      "column": "budget",
+      "zeros_set_to_na": 2703
+    },
+    {
+      "step": "clean",
+      "check": "zero_to_na",
+      "column": "revenue",
+      "zeros_set_to_na": 2066
+    },
+    {
+      "step": "clean",
+      "check": "tmdb_dedup",
+      "rows_before": 9167,
+      "rows_after": 8255
+    },
+    {
+      "step": "clean",
+      "check": "table",
+      "table": "tmdb",
+      "grain": "1 IMDb tconst looked up on TMDb",
+      "key": [
+        "tconst"
+      ],
+      "rows": 8255,
+      "key_unique": true,
+      "duplicate_keys": 0,
+      "dtypes": {
+        "tmdb_id": "float64",
+        "release_date": "datetime64[us]",
+        "original_language": "str",
+        "budget": "Int64",
+        "revenue": "Int64"
+      },
+      "na_pct": {
+        "tmdb_id": 0.19,
+        "release_date": 0.22,
+        "original_language": 0.19,
+        "budget": 32.94,
+        "revenue": 25.22
+      }
+    },
+    {
+      "step": "integrate",
+      "check": "scope",
+      "nominations_2000plus": 3153,
+      "film_or_person": 3148,
+      "other_categories_dropped": [
+        "Best Casting"
+      ]
+    },
+    {
+      "step": "integrate",
+      "check": "overrides",
+      "file": "data/reference/match_overrides.csv",
+      "applied": 4,
+      "changed_previous_match": 3,
+      "redundant_with_automatic_match": []
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "films (all film categories, 2000+) [strict 2025]",
+      "total": 2473,
+      "matched": 1894,
+      "unmatched": 579,
+      "match_rate_pct": 76.59
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "films (all film categories, 2000+) [final]",
+      "total": 2473,
+      "matched": 1949,
+      "unmatched": 524,
+      "match_rate_pct": 78.81
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "persons (all person categories, 2000+) [strict 2025]",
+      "total": 675,
+      "matched": 659,
+      "unmatched": 16,
+      "match_rate_pct": 97.63
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "persons (all person categories, 2000+) [final]",
+      "total": 675,
+      "matched": 675,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "total (2000+) [strict 2025]",
+      "total": 3148,
+      "matched": 2553,
+      "unmatched": 595,
+      "match_rate_pct": 81.1
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "total (2000+) [final]",
+      "total": 3148,
+      "matched": 2624,
+      "unmatched": 524,
+      "match_rate_pct": 83.35
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "7 study categories [strict 2025]",
+      "total": 1016,
+      "matched": 992,
+      "unmatched": 24,
+      "match_rate_pct": 97.64
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "7 study categories [final]",
+      "total": 1016,
+      "matched": 1016,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Actor in a Leading Role [strict 2025]",
+      "total": 135,
+      "matched": 135,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Actor in a Leading Role [final]",
+      "total": 135,
+      "matched": 135,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Actor in a Supporting Role [strict 2025]",
+      "total": 135,
+      "matched": 128,
+      "unmatched": 7,
+      "match_rate_pct": 94.81
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Actor in a Supporting Role [final]",
+      "total": 135,
+      "matched": 135,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Actress in a Leading Role [strict 2025]",
+      "total": 135,
+      "matched": 134,
+      "unmatched": 1,
+      "match_rate_pct": 99.26
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Actress in a Leading Role [final]",
+      "total": 135,
+      "matched": 135,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Actress in a Supporting Role [strict 2025]",
+      "total": 135,
+      "matched": 132,
+      "unmatched": 3,
+      "match_rate_pct": 97.78
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Actress in a Supporting Role [final]",
+      "total": 135,
+      "matched": 135,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Directing [strict 2025]",
+      "total": 135,
+      "matched": 130,
+      "unmatched": 5,
+      "match_rate_pct": 96.3
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Directing [final]",
+      "total": 135,
+      "matched": 135,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Picture [strict 2025]",
+      "total": 206,
+      "matched": 202,
+      "unmatched": 4,
+      "match_rate_pct": 98.06
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Picture [final]",
+      "total": 206,
+      "matched": 206,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Writing (Original Screenplay) [strict 2025]",
+      "total": 135,
+      "matched": 131,
+      "unmatched": 4,
+      "match_rate_pct": 97.04
+    },
+    {
+      "step": "integrate",
+      "check": "match_rate",
+      "scope": "category: Best Writing (Original Screenplay) [final]",
+      "total": 135,
+      "matched": 135,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "integrate",
+      "check": "match_status",
+      "counts": {
+        "matched": 1894,
+        "matched_name_and_film": 647,
+        "short_film_not_in_imdb_movie_type": 286,
+        "song_title_not_a_film_title": 127,
+        "title_found_outside_year_window": 64,
+        "matched_normalized": 57,
+        "title_not_found_in_imdb_movies": 47,
+        "matched_film_only": 22,
+        "matched_override": 4
+      }
+    },
+    {
+      "step": "integrate",
+      "check": "person_film_vs_2025_rule",
+      "compared": 659,
+      "same_film": 415,
+      "different_film": 244,
+      "different_film_pct": 37.03,
+      "examples": [
+        [
+          "2000",
+          "Best Actor in a Leading Role",
+          "Russell Crowe",
+          "The Insider"
+        ],
+        [
+          "2000",
+          "Best Actor in a Leading Role",
+          "Denzel Washington",
+          "The Hurricane"
+        ],
+        [
+          "2000",
+          "Best Actress in a Leading Role",
+          "Annette Bening",
+          "American Beauty"
+        ],
+        [
+          "2000",
+          "Best Actress in a Leading Role",
+          "Julianne Moore",
+          "The End of the Affair"
+        ],
+        [
+          "2000",
+          "Best Actor in a Supporting Role",
+          "Tom Cruise",
+          "Magnolia"
+        ],
+        [
+          "2000",
+          "Best Actor in a Supporting Role",
+          "Jude Law",
+          "The Talented Mr. Ripley"
+        ],
+        [
+          "2000",
+          "Best Actor in a Supporting Role",
+          "Haley Joel Osment",
+          "The Sixth Sense"
+        ],
+        [
+          "2000",
+          "Best Actress in a Supporting Role",
+          "Angelina Jolie",
+          "Girl, Interrupted"
+        ],
+        [
+          "2000",
+          "Best Actress in a Supporting Role",
+          "Toni Collette",
+          "The Sixth Sense"
+        ],
+        [
+          "2000",
+          "Best Actress in a Supporting Role",
+          "Samantha Morton",
+          "Sweet and Lowdown"
+        ]
+      ]
+    },
+    {
+      "step": "integrate",
+      "check": "unmatched_reasons",
+      "counts": {
+        "short_film_not_in_imdb_movie_type": 286,
+        "song_title_not_a_film_title": 127,
+        "title_found_outside_year_window": 64,
+        "title_not_found_in_imdb_movies": 47
+      }
+    },
+    {
+      "step": "integrate",
+      "check": "person_match_quality",
+      "matched": 675,
+      "role_mismatch": 25,
+      "role_mismatch_examples": [
+        [
+          "2002",
+          "Best Actress in a Supporting Role",
+          "Helen Mirren",
+          NaN
+        ],
+        [
+          "2003",
+          "Best Actor in a Supporting Role",
+          "Ed Harris",
+          NaN
+        ],
+        [
+          "2003",
+          "Best Actress in a Supporting Role",
+          "Queen Latifah",
+          NaN
+        ],
+        [
+          "2005",
+          "Best Directing",
+          "Clint Eastwood",
+          "actor"
+        ],
+        [
+          "2006",
+          "Best Directing",
+          "George Clooney",
+          "actor"
+        ],
+        [
+          "2006",
+          "Best Actor in a Supporting Role",
+          "Matt Dillon",
+          NaN
+        ],
+        [
+          "2006",
+          "Best Actress in a Supporting Role",
+          "Amy Adams",
+          NaN
+        ],
+        [
+          "2007",
+          "Best Actress in a Supporting Role",
+          "Adriana Barraza",
+          NaN
+        ],
+        [
+          "2007",
+          "Best Actress in a Supporting Role",
+          "Rinko Kikuchi",
+          NaN
+        ],
+        [
+          "2008",
+          "Best Actress in a Leading Role",
+          "Elliot Page [ a ]",
+          "actor"
+        ]
+      ],
+      "nominee_names_with_several_imdb_ids": 83
+    },
+    {
+      "step": "integrate",
+      "check": "title_normalisation",
+      "film_nominees": 2473,
+      "changed_by_norm_title": 150
+    },
+    {
+      "step": "integrate",
+      "check": "join",
+      "join": "nominations <- imdb movies",
+      "key": [
+        "tconst"
+      ],
+      "relation": "n-1",
+      "rows_before": 2624,
+      "rows_after": 2624,
+      "right_rows": 410818,
+      "right_key_unique": true,
+      "matched": 2624,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "integrate",
+      "check": "join",
+      "join": "nominations <- tmdb",
+      "key": [
+        "tconst"
+      ],
+      "relation": "n-1",
+      "rows_before": 2624,
+      "rows_after": 2624,
+      "right_rows": 8255,
+      "right_key_unique": true,
+      "matched": 2609,
+      "unmatched": 15,
+      "match_rate_pct": 99.43
+    },
+    {
+      "step": "integrate",
+      "check": "table",
+      "table": "nominations_matched",
+      "grain": "1 nomination 2000+ matched to an IMDb movie",
+      "key": [
+        "year",
+        "category",
+        "nominee",
+        "tconst"
+      ],
+      "rows": 2624,
+      "key_unique": true,
+      "duplicate_keys": 0,
+      "dtypes": {
+        "nconst": "str",
+        "runtimeMinutes": "Int32",
+        "averageRating": "Float32",
+        "numVotes": "Int32",
+        "tmdb_id": "float64",
+        "release_date": "datetime64[us]",
+        "budget": "Int64"
+      },
+      "na_pct": {
+        "nconst": 74.28,
+        "runtimeMinutes": 0.27,
+        "averageRating": 0.61,
+        "numVotes": 0.61,
+        "tmdb_id": 1.33,
+        "release_date": 1.37,
+        "budget": 11.97
+      }
+    },
+    {
+      "step": "integrate",
+      "check": "outliers",
+      "column": "imdb runtimeMinutes (movies)",
+      "rule": "[40, 300]",
+      "below": 383,
+      "above": 412,
+      "quantiles": {
+        "0.0": 1,
+        "0.01": 45,
+        "0.5": 89,
+        "0.99": 168,
+        "1.0": 51420
+      }
+    },
+    {
+      "step": "integrate",
+      "check": "outliers",
+      "column": "imdb numVotes (movies)",
+      "rule": "[0, None]",
+      "below": 0,
+      "above": 0,
+      "quantiles": {
+        "0.0": 5.0,
+        "0.01": 6.0,
+        "0.5": 71.0,
+        "0.99": 100138.78,
+        "1.0": 3244961.0
+      }
+    },
+    {
+      "step": "integrate",
+      "check": "outliers",
+      "column": "tmdb budget (USD)",
+      "rule": "[10000, 500000000]",
+      "below": 12,
+      "above": 1,
+      "quantiles": {
+        "0.0": 1.0,
+        "0.01": 125000.0,
+        "0.5": 20000000.0,
+        "0.99": 213250000.0,
+        "1.0": 658800000.0
+      }
+    },
+    {
+      "step": "build_analytical",
+      "check": "parameters",
+      "min_votes": 10000,
+      "min_rating": 5.0,
+      "min_runtime": 60,
+      "min_film_year": 1999,
+      "max_film_year": 2025,
+      "excluded_genre": "Documentary"
+    },
+    {
+      "step": "build_analytical",
+      "check": "join",
+      "join": "films <- tmdb",
+      "key": [
+        "tconst"
+      ],
+      "relation": "1-1",
+      "rows_before": 410818,
+      "rows_after": 410818,
+      "right_rows": 8255,
+      "right_key_unique": true,
+      "matched": 8255,
+      "unmatched": 402563,
+      "match_rate_pct": 2.01
+    },
+    {
+      "step": "build_analytical",
+      "check": "ceremony_alignment",
+      "rule": "ceremony = startYear + 1; nominated films use their actual nomination ceremony",
+      "nominated_films": 445,
+      "films_shifted_to_actual_ceremony": 20,
+      "films_nominated_in_several_ceremonies": 0
+    },
+    {
+      "step": "build_analytical",
+      "check": "join",
+      "join": "film_universe <- positives",
+      "key": [
+        "tconst",
+        "year",
+        "category"
+      ],
+      "relation": "1-1",
+      "rows_before": 23957,
+      "rows_after": 23957,
+      "right_rows": 476,
+      "right_key_unique": true,
+      "matched": 476,
+      "unmatched": 23481,
+      "match_rate_pct": 1.99
+    },
+    {
+      "step": "build_analytical",
+      "check": "join",
+      "join": "film_universe <- director prior record",
+      "key": [
+        "tconst",
+        "year"
+      ],
+      "relation": "n-1",
+      "rows_before": 23957,
+      "rows_after": 23957,
+      "right_rows": 7986,
+      "right_key_unique": true,
+      "matched": 23957,
+      "unmatched": 0,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "build_analytical",
+      "check": "universe",
+      "table": "film_universe",
+      "rows": 23957,
+      "nominated": 476,
+      "reinjected": 2,
+      "reinjection_reasons": {
+        "votes+rating": 2
+      },
+      "by_category": [
+        {
+          "category": "Best Directing",
+          "rows": 7985,
+          "nominated": 135,
+          "reinjected": 0,
+          "nomination_rate_pct": 1.69
+        },
+        {
+          "category": "Best Picture",
+          "rows": 7986,
+          "nominated": 206,
+          "reinjected": 1,
+          "nomination_rate_pct": 2.58
+        },
+        {
+          "category": "Best Writing (Original Screenplay)",
+          "rows": 7986,
+          "nominated": 135,
+          "reinjected": 1,
+          "nomination_rate_pct": 1.69
+        }
+      ],
+      "tmdb_coverage_pct": {
+        "nominated": 99.58,
+        "not_nominated": 100.0
+      }
+    },
+    {
+      "step": "build_analytical",
+      "check": "table",
+      "table": "film_universe",
+      "grain": "1 eligible (or re-injected nominated) film x studio category x ceremony",
+      "key": [
+        "tconst",
+        "year",
+        "category"
+      ],
+      "rows": 23957,
+      "key_unique": true,
+      "duplicate_keys": 0,
+      "dtypes": {
+        "imdb_votes": "Int32",
+        "imdb_rating": "Float32",
+        "runtime_minutes": "Int32",
+        "release_month": "Int8",
+        "budget": "Int64",
+        "original_language": "str",
+        "director_n_prior_noms": "int64"
+      },
+      "na_pct": {
+        "imdb_votes": 0.0,
+        "imdb_rating": 0.0,
+        "runtime_minutes": 0.0,
+        "release_month": 0.01,
+        "budget": 31.45,
+        "original_language": 0.01,
+        "director_n_prior_noms": 0.0
+      }
+    },
+    {
+      "step": "build_analytical",
+      "check": "cast_dedup",
+      "key": [
+        "nconst",
+        "tconst"
+      ],
+      "rows_before": 81407,
+      "rows_after": 79266
+    },
+    {
+      "step": "build_analytical",
+      "check": "join",
+      "join": "talent_universe <- positives",
+      "key": [
+        "nconst",
+        "tconst",
+        "year",
+        "category"
+      ],
+      "relation": "1-1",
+      "rows_before": 158556,
+      "rows_after": 158556,
+      "right_rows": 540,
+      "right_key_unique": true,
+      "matched": 540,
+      "unmatched": 158016,
+      "match_rate_pct": 0.34
+    },
+    {
+      "step": "build_analytical",
+      "check": "join",
+      "join": "talent_universe <- names",
+      "key": [
+        "nconst"
+      ],
+      "relation": "n-1",
+      "rows_before": 158556,
+      "rows_after": 158556,
+      "right_rows": 1864790,
+      "right_key_unique": true,
+      "matched": 158554,
+      "unmatched": 2,
+      "match_rate_pct": 100.0
+    },
+    {
+      "step": "build_analytical",
+      "check": "universe",
+      "table": "talent_universe",
+      "rows": 158556,
+      "nominated": 540,
+      "reinjected": 24,
+      "reinjection_reasons": {
+        "not_in_imdb_cast_list_or_role": 23,
+        "votes": 1
+      },
+      "by_category": [
+        {
+          "category": "Best Actor in a Leading Role",
+          "rows": 51303,
+          "nominated": 135,
+          "reinjected": 1,
+          "nomination_rate_pct": 0.26
+        },
+        {
+          "category": "Best Actor in a Supporting Role",
+          "rows": 51307,
+          "nominated": 135,
+          "reinjected": 5,
+          "nomination_rate_pct": 0.26
+        },
+        {
+          "category": "Best Actress in a Leading Role",
+          "rows": 27966,
+          "nominated": 135,
+          "reinjected": 2,
+          "nomination_rate_pct": 0.48
+        },
+        {
+          "category": "Best Actress in a Supporting Role",
+          "rows": 27980,
+          "nominated": 135,
+          "reinjected": 16,
+          "nomination_rate_pct": 0.48
+        }
+      ],
+      "tmdb_coverage_pct": {
+        "nominated": 100.0,
+        "not_nominated": 100.0
+      }
+    },
+    {
+      "step": "build_analytical",
+      "check": "table",
+      "table": "talent_universe",
+      "grain": "1 actor/actress x eligible (or re-injected) film x talent category x ceremony",
+      "key": [
+        "nconst",
+        "tconst",
+        "year",
+        "category"
+      ],
+      "rows": 158556,
+      "key_unique": true,
+      "duplicate_keys": 0,
+      "dtypes": {
+        "imdb_votes": "Int32",
+        "imdb_rating": "Float32",
+        "runtime_minutes": "Int32",
+        "release_month": "Int8",
+        "budget": "Int64",
+        "original_language": "str",
+        "billing_order": "Int16",
+        "person_name": "str"
+      },
+      "na_pct": {
+        "imdb_votes": 0.0,
+        "imdb_rating": 0.0,
+        "runtime_minutes": 0.0,
+        "release_month": 0.0,
+        "budget": 31.32,
+        "original_language": 0.0,
+        "billing_order": 0.01,
+        "person_name": 0.0
+      }
+    }
+  ]
+}
