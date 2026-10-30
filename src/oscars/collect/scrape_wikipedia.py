@@ -197,7 +197,7 @@ class WikipediaScraper:
 
         return None
 
-    def get_award(self, table_cell) -> str:
+    def get_award(self, table_cell: Tag) -> str:
         """
         Extracts the award name from a table cell element. Returns "Unknown Award" if no award name is found.
         """
@@ -224,20 +224,23 @@ class WikipediaScraper:
             clean_spaces(secondary.strip()) if secondary else None,
         )
 
-    def get_winner(self, table_cell) -> str:
+    def get_winner(self, table_cell: Tag) -> str:
         """
         Extracts the winner from the Wikipedia Awards table cells - usually bolded inside <ul><li>.
         """
 
         try:
             ul = table_cell.find("ul")
-            main_li = ul.find("li")
-            winner_text = main_li.find("b").get_text(separator=" ", strip=True)
+            main_li = ul.find("li") if isinstance(ul, Tag) else None
+            bold = main_li.find("b") if isinstance(main_li, Tag) else None
+            if not isinstance(bold, Tag):
+                return "Unknown Winner"
+            winner_text = bold.get_text(separator=" ", strip=True)
             return self.split_nominee_text(winner_text)[0]
         except (AttributeError, TypeError):
             return "Unknown Winner"
 
-    def get_nominees(self, table_cell) -> list[str]:
+    def get_nominees(self, table_cell: Tag) -> list[str]:
         """
         Extracts the nominees from the Wikipedia Awards table cell.
         Assumes:
@@ -281,7 +284,7 @@ class WikipediaScraper:
 
         return nominees
 
-    def get_detailed_entries(self, table_cell) -> list[tuple[str, str | None]]:
+    def get_detailed_entries(self, table_cell: Tag) -> list[tuple[str, str | None]]:
         """
         Returns (primary, details) for the winner then each nominee, in page order.
 
@@ -292,12 +295,10 @@ class WikipediaScraper:
 
         entries: list[tuple[str, str | None]] = [(self.get_winner(table_cell), self.get_winner_details(table_cell))]
 
-        try:
-            first_li = table_cell.find("ul").find("li")
-            sub_ul = first_li.find("ul")
-        except AttributeError:
-            return entries
-        if not sub_ul:
+        ul = table_cell.find("ul")
+        first_li = ul.find("li") if isinstance(ul, Tag) else None
+        sub_ul = first_li.find("ul") if isinstance(first_li, Tag) else None
+        if not isinstance(sub_ul, Tag):
             return entries
 
         for nominee in sub_ul.find_all("li"):
@@ -307,24 +308,22 @@ class WikipediaScraper:
 
         return entries
 
-    def get_winner_details(self, table_cell) -> str | None:
+    def get_winner_details(self, table_cell: Tag) -> str | None:
         """
         Extracts the secondary text of the winner line (text after " – "), ignoring the nested
         nominees list and the winner dagger markers.
         """
 
-        try:
-            first_li = table_cell.find("ul").find("li")
-        except AttributeError:
-            return None
-        if first_li is None:
+        ul = table_cell.find("ul")
+        first_li = ul.find("li") if isinstance(ul, Tag) else None
+        if not isinstance(first_li, Tag):
             return None
 
         parts = []
         for child in first_li.children:
             if getattr(child, "name", None) == "ul":
                 continue
-            text = child.get_text(separator=" ", strip=True) if hasattr(child, "get_text") else child.strip()
+            text = child.get_text(separator=" ", strip=True) if isinstance(child, Tag) else str(child).strip()
             if text:
                 parts.append(text)
         line_text = " ".join(parts).strip(WINNER_MARKERS + " ")

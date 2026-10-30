@@ -8,6 +8,7 @@ Normalisation logic is taken from the 2025 notebook 01_Merge_datasets.ipynb.
 """
 
 import re
+from typing import Any
 
 import pandas as pd
 
@@ -101,6 +102,16 @@ def strip_footnotes(s: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"\[\d+\]", "", s)).strip()
 
 
+def normalize_categories(labels: pd.Series) -> pd.Series:
+    """Canonical category label: footnotes stripped, then historical variants mapped (CATEGORY_MAP)."""
+    return labels.map(strip_footnotes).replace(CATEGORY_MAP)
+
+
+def zero_to_na(amounts: pd.Series) -> pd.Series:
+    """TMDb money amounts: 0 (and any non-positive value) means unknown -> NA, as nullable Int64."""
+    return amounts.where(amounts > 0).astype("Int64")
+
+
 # ---------------------------------------------------------------------------
 # Oscar nominations
 # ---------------------------------------------------------------------------
@@ -111,7 +122,7 @@ def load_oscars(report: Report) -> pd.DataFrame:
     raw = pd.read_csv(SCRAPING_DIR / "all_data_oscars.csv", dtype={"winner": "string", "nominees": "string"})
     raw["year"] = raw["year"].astype("Int16")
     raw["ceremony_number"] = raw["ceremony_number"].astype("Int16")
-    raw["category_clean"] = raw["category"].map(strip_footnotes).replace(CATEGORY_MAP)
+    raw["category_clean"] = normalize_categories(raw["category"])
 
     report.add(
         STEP,
@@ -183,7 +194,7 @@ def load_nominations(raw: pd.DataFrame, report: Report) -> pd.DataFrame:
         {
             "ceremony_number": det["ceremony_number"].astype("Int16"),
             "year": det["year"].astype("Int16"),
-            "category": det["category"].map(strip_footnotes).replace(CATEGORY_MAP),
+            "category": normalize_categories(det["category"]),
             "nominee": det["nominee"].str.strip(),
             "winner": det["is_winner"].astype(bool),
             "position": det["position"].astype("Int16"),
@@ -218,8 +229,8 @@ def load_nominations(raw: pd.DataFrame, report: Report) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 
 
-def _tsv_chunks(name: str, **kwargs: object) -> "pd.io.parsers.TextFileReader":
-    return pd.read_csv(IMDB_DIR / name, sep="\t", na_values="\\N", chunksize=1_000_000, **kwargs)  # type: ignore[call-overload,no-any-return]
+def _tsv_chunks(name: str, **kwargs: Any) -> "pd.io.parsers.TextFileReader":
+    return pd.read_csv(IMDB_DIR / name, sep="\t", na_values="\\N", chunksize=1_000_000, **kwargs)
 
 
 def _parse_movies() -> tuple[pd.DataFrame, int]:
@@ -337,7 +348,7 @@ def load_tmdb(report: Report) -> pd.DataFrame:
 
     for col in ["budget", "revenue"]:
         zeros = int((tmdb[col] == 0).sum())
-        tmdb[col] = tmdb[col].where(tmdb[col] > 0).astype("Int64")  # 0 = unknown in TMDb
+        tmdb[col] = zero_to_na(tmdb[col])
         report.add(STEP, "zero_to_na", column=col, zeros_set_to_na=zeros)
     tmdb["release_date"] = pd.to_datetime(tmdb["release_date"].replace("", pd.NA), errors="coerce")
 

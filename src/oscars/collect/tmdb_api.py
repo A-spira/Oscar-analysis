@@ -21,6 +21,7 @@ import os
 import re
 import time
 from dataclasses import dataclass
+from typing import Any
 
 import pandas as pd
 import requests
@@ -156,7 +157,7 @@ def load_oscar_nominations() -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 
 
-def _read_tsv_chunks(name: str, **kwargs):
+def _read_tsv_chunks(name: str, **kwargs: Any) -> "pd.io.parsers.TextFileReader":
     return pd.read_csv(IMDB_DIR / name, sep="\t", na_values="\\N", chunksize=500_000, **kwargs)
 
 
@@ -206,7 +207,7 @@ def norm_title(s: str) -> str:
     return s.strip()
 
 
-def match_film_to_imdb(title, oscar_year, lookup):
+def match_film_to_imdb(title: str, oscar_year: int, lookup: dict[str, list[tuple[str, int]]]) -> str | None:
     """Trouve le tconst IMDb le plus probable pour un titre de film nomine aux Oscars.
 
     La ceremonie Oscar d'une annee N recompense des films sortis en N-1 (parfois N-2).
@@ -230,7 +231,13 @@ def match_film_to_imdb(title, oscar_year, lookup):
     return scored[0][0]  # tconst du meilleur match
 
 
-def match_person_to_film(person_name, oscar_year, oscar_category, name_lookup, film_index):
+def match_person_to_film(
+    person_name: str,
+    oscar_year: int,
+    oscar_category: str,
+    name_lookup: dict[str, list[str]],
+    film_index: dict[str, list[tuple[str, int, str]]],
+) -> tuple[str | None, str | None]:
     """Trouve le tconst du film pour lequel une personne est nommee aux Oscars.
 
     1. Trouve le nconst de la personne via son nom
@@ -291,14 +298,15 @@ def matched_tconsts() -> list:
     person_film_index = _group_to_lists(principals_with_year, "nconst", ["tconst", "startYear", "category"])
 
     oscar_films = oscars[oscars["nominee_type"] == "film"].copy()
-    oscar_films["tconst"] = oscar_films.apply(
-        lambda r: match_film_to_imdb(r["nominee"], r["year"], title_lookup), axis=1
-    )
+    oscar_films["tconst"] = [
+        match_film_to_imdb(n, int(y), title_lookup)
+        for n, y in zip(oscar_films["nominee"], oscar_films["year"], strict=True)
+    ]
     oscar_persons = oscars[oscars["nominee_type"] == "person"].copy()
-    oscar_persons["tconst"] = oscar_persons.apply(
-        lambda r: match_person_to_film(r["nominee"], r["year"], r["category"], name_lookup, person_film_index)[0],
-        axis=1,
-    )
+    oscar_persons["tconst"] = [
+        match_person_to_film(n, int(y), c, name_lookup, person_film_index)[0]
+        for n, y, c in zip(oscar_persons["nominee"], oscar_persons["year"], oscar_persons["category"], strict=True)
+    ]
 
     for label, part in [("film", oscar_films), ("personne", oscar_persons)]:
         n = part["tconst"].notna().sum()
@@ -327,7 +335,7 @@ def _mask(text: str, api_key: str) -> str:
     return text.replace(api_key, "***")
 
 
-def _tmdb_get(session, api_key, path, **params):
+def _tmdb_get(session: requests.Session, api_key: str, path: str, **params: str) -> tuple[int | None, dict[str, Any]]:
     """Appel GET TMDb avec retry simple sur 429 (rate limit). Renvoie (status_code, json)."""
     params["api_key"] = api_key
     status = None
@@ -343,7 +351,7 @@ def _tmdb_get(session, api_key, path, **params):
         return status, {"_error": _mask(str(e), api_key)}
 
 
-def fetch_tmdb(session, api_key, tconst):
+def fetch_tmdb(session: requests.Session, api_key: str, tconst: str) -> dict[str, Any]:
     """Recupere overview, keywords, budget, etc. pour un tconst IMDb (2 calls TMDb)."""
     # Etape 1 : resoudre tconst -> tmdb_id
     _, find = _tmdb_get(session, api_key, f"/find/{tconst}", external_source="imdb_id")
