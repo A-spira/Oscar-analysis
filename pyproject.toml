@@ -24,12 +24,39 @@ build-backend = "uv_build"
 dev = [
     "mypy>=2.4.1",
     "pandas-stubs>=3.1.0.261029",
+    "pytest>=9.2.0",
     "ruff>=0.17.3",
+    "types-requests>=2.33.0.20261006",
+    "types-tqdm>=4.70.0.20260906",
 ]
 
+# Ruff: lint + format for all project code (src/ and tests/). No rule is ignored globally.
 [tool.ruff]
 line-length = 120
 target-version = "py312"
+src = ["src", "tests"]          # first-party packages for import sorting (rule I)
+include = ["src/**/*.py", "tests/**/*.py"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]
+select = ["E", "F", "I", "UP", "B"]  # pycodestyle, pyflakes, isort, pyupgrade, bugbear
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
+
+# mypy: type-check all project code with the stricter options below.
+[tool.mypy]
+python_version = "3.12"
+files = ["src", "tests"]
+mypy_path = "src"
+disallow_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+strict_equality = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
