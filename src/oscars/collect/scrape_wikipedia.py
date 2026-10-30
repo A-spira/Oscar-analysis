@@ -7,7 +7,11 @@ timeout HTTP.
 Sortie : data/raw/scraping/all_data_oscars.csv et .json
 (une ligne = une categorie x ceremonie, nommes separes par " | ").
 
-Usage : uv run python -m oscars.collect.scrape_wikipedia [--start 1929] [--end 2026]
+Detailed mode (--detailed): writes data/raw/scraping/all_data_oscars_detailed.csv and .json
+instead, one row per nominee, keeping the secondary text after " – " (`details`) and, for
+person categories (acting, directing), the film title extracted from it (`film`).
+
+Usage : uv run python -m oscars.collect.scrape_wikipedia [--start 1929] [--end 2026] [--detailed]
 """
 
 import argparse
@@ -15,11 +19,11 @@ import logging
 import re
 import time
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Any
 
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from tqdm import tqdm
 
 from oscars.paths import SCRAPING_DIR
@@ -35,12 +39,17 @@ USER_AGENT = (
 REQUEST_PAUSE_S = 1.0  # pause polie entre deux pages
 REQUEST_TIMEOUT_S = 30
 
+# Categories whose primary is a person and whose secondary starts with the film title
+# ("Best Actor", "Best Actress in a Supporting Role", "Best Director", "Best Directing", ...)
+PERSON_CATEGORY_PATTERN = re.compile(r"\b(actor|actress|director|directing)\b", re.IGNORECASE)
+WINNER_MARKERS = "‡†"  # double dagger / dagger templates placed after the winner's name
+
 
 @dataclass
 class Award:
     category: str
     winner: str
-    nominees: List[str]
+    nominees: list[str]
 
 
 def clean_spaces(text: str) -> str:
@@ -55,7 +64,7 @@ def clean_spaces(text: str) -> str:
     return text
 
 
-def generate_oscar_urls(start_year: int = 1929, end_year: int = 2026) -> List[Dict]:
+def generate_oscar_urls(start_year: int = 1929, end_year: int = 2026) -> list[dict]:
     """
     Generate URLs for every Oscar ceremony from start_year to end_year.
     """
@@ -72,11 +81,13 @@ def generate_oscar_urls(start_year: int = 1929, end_year: int = 2026) -> List[Di
 
         url = f"https://en.wikipedia.org/wiki/{ceremony_num}{suffix}_Academy_Awards"
 
-        urls.append({
-            "ceremony_number": ceremony_num,
-            "year": year,
-            "url": url,
-        })
+        urls.append(
+            {
+                "ceremony_number": ceremony_num,
+                "year": year,
+                "url": url,
+            }
+        )
 
     return urls
 
@@ -86,7 +97,7 @@ class WikipediaScraper:
     Scrapes data from Oscars Wikipedia pages.
     """
 
-    def __init__(self, url: str, session: Optional[requests.Session] = None):
+    def __init__(self, url: str, session: requests.Session | None = None):
         self.url = url
         if session is None:
             session = requests.Session()
@@ -107,14 +118,17 @@ class WikipediaScraper:
             logger.error(f"Failed to fetch {self.url}: {e}")
             raise
 
-    def scrape_ceremony(self) -> Dict:
+    def scrape_ceremony(self, detailed: bool = False) -> dict:
         """
         Scrape data from a single Oscar ceremony Wikipedia page.
+
+        With detailed=True, each award also carries "entries": a list of (primary, details)
+        pairs, winner first then nominees in page order.
         """
 
         logger.info(f"Scraping: {self.url}")
 
-        ceremony_data = {
+        ceremony_data: dict[str, Any] = {
             "url": self.url,
             "date": self.get_date(),
             "awards": [],
@@ -131,18 +145,21 @@ class WikipediaScraper:
                         winner=self.get_winner(cell),
                         nominees=self.get_nominees(cell),
                     )
-                    ceremony_data["awards"].append({
+                    award_dict: dict[str, Any] = {
                         "category": award_data.category,
                         "winner": award_data.winner,
                         "nominees": award_data.nominees,
-                    })
+                    }
+                    if detailed:
+                        award_dict["entries"] = self.get_detailed_entries(cell)
+                    ceremony_data["awards"].append(award_dict)
 
         except Exception as e:
             logger.error(f"Failed to parse ceremony {self.url}: {e}")
 
         return ceremony_data
 
-    def get_award_table_rows(self) -> List[BeautifulSoup]:
+    def get_award_table_rows(self) -> list[Tag]:
         """
         Extracts the Awards table and its corresponding rows for subsequent parsing.
         This could be titled differently across different pages.
@@ -152,15 +169,17 @@ class WikipediaScraper:
 
         for header_tag in ["h3", "h2"]:
             for title in possible_titles:
-                header = self.soup.find(header_tag, string=lambda s: s and s.lower().strip() == title.lower())
+                header = self.soup.find(
+                    header_tag, string=lambda s, title=title: s and s.lower().strip() == title.lower()
+                )
                 if header:
                     table = header.find_next("table", class_="wikitable")
                     if table:
-                        return table.find_all("tr")  # tr for rows.
+                        return list(table.find_all("tr"))  # tr for rows.
 
         raise Exception("Awards section not found with expected headers.")
 
-    def get_date(self) -> Optional[str]:
+    def get_date(self) -> str | None:
         """
         Extracts the date of the Academy Awards ceremony from the Wikipedia infobox.
         """
@@ -187,7 +206,7 @@ class WikipediaScraper:
         award_name = award_div.get_text(strip=True) if award_div else "Unknown Award"
         return award_name
 
-    def split_nominee_text(self, nominee_text: str) -> Tuple[str, Optional[str]]:
+    def split_nominee_text(self, nominee_text: str) -> tuple[str, str | None]:
         """
         Takes the nominee line item information and returns the primary winner and secondary information.
 
@@ -200,10 +219,10 @@ class WikipediaScraper:
             primary, secondary = nominee_text.split(" – ", 1)
         else:
             primary, secondary = nominee_text, None
-        return [
+        return (
             clean_spaces(primary.strip()),
             clean_spaces(secondary.strip()) if secondary else None,
-        ]
+        )
 
     def get_winner(self, table_cell) -> str:
         """
@@ -218,7 +237,7 @@ class WikipediaScraper:
         except (AttributeError, TypeError):
             return "Unknown Winner"
 
-    def get_nominees(self, table_cell) -> List[str]:
+    def get_nominees(self, table_cell) -> list[str]:
         """
         Extracts the nominees from the Wikipedia Awards table cell.
         Assumes:
@@ -262,8 +281,69 @@ class WikipediaScraper:
 
         return nominees
 
+    def get_detailed_entries(self, table_cell) -> list[tuple[str, str | None]]:
+        """
+        Returns (primary, details) for the winner then each nominee, in page order.
 
-def scrape_all_wiki(start_year: int = 1929, end_year: int = 2026) -> List[Dict]:
+        The primary is parsed exactly as get_winner / get_nominees do. The winner's details are
+        read from the whole winner line (outside the nested nominees list), because on some
+        pages only the name is bolded and the film follows outside the <b> tag.
+        """
+
+        entries: list[tuple[str, str | None]] = [(self.get_winner(table_cell), self.get_winner_details(table_cell))]
+
+        try:
+            first_li = table_cell.find("ul").find("li")
+            sub_ul = first_li.find("ul")
+        except AttributeError:
+            return entries
+        if not sub_ul:
+            return entries
+
+        for nominee in sub_ul.find_all("li"):
+            nominee_text = nominee.get_text(separator=" ", strip=True)
+            primary, details = self.split_nominee_text(nominee_text)
+            entries.append((primary, details))
+
+        return entries
+
+    def get_winner_details(self, table_cell) -> str | None:
+        """
+        Extracts the secondary text of the winner line (text after " – "), ignoring the nested
+        nominees list and the winner dagger markers.
+        """
+
+        try:
+            first_li = table_cell.find("ul").find("li")
+        except AttributeError:
+            return None
+        if first_li is None:
+            return None
+
+        parts = []
+        for child in first_li.children:
+            if getattr(child, "name", None) == "ul":
+                continue
+            text = child.get_text(separator=" ", strip=True) if hasattr(child, "get_text") else child.strip()
+            if text:
+                parts.append(text)
+        line_text = " ".join(parts).strip(WINNER_MARKERS + " ")
+        return self.split_nominee_text(line_text)[1]
+
+
+def extract_film(category: str, details: str | None) -> str:
+    """
+    Film title for person categories: the details text before " as " (actors) or the whole
+    details text (directors). Empty for film categories or when there are no details.
+    """
+
+    if not details or not PERSON_CATEGORY_PATTERN.search(category or ""):
+        return ""
+    film = details.split(" as ", 1)[0]
+    return film.strip().strip(WINNER_MARKERS).strip()
+
+
+def scrape_all_wiki(start_year: int = 1929, end_year: int = 2026, detailed: bool = False) -> list[dict]:
     urls = generate_oscar_urls(start_year, end_year)
     all_data = []
 
@@ -274,7 +354,7 @@ def scrape_all_wiki(start_year: int = 1929, end_year: int = 2026) -> List[Dict]:
                 time.sleep(REQUEST_PAUSE_S)
             try:
                 scraper = WikipediaScraper(entry["url"], session=session)
-                data = scraper.scrape_ceremony()
+                data = scraper.scrape_ceremony(detailed=detailed)
                 data["ceremony_number"] = entry["ceremony_number"]
                 data["year"] = entry["year"]
                 all_data.append(data)
@@ -284,20 +364,46 @@ def scrape_all_wiki(start_year: int = 1929, end_year: int = 2026) -> List[Dict]:
     return all_data
 
 
-def to_dataframe(all_data: List[Dict]) -> pd.DataFrame:
+def to_dataframe(all_data: list[dict]) -> pd.DataFrame:
     """Aplatit la structure imbriquee : une ligne = une categorie x ceremonie."""
     rows = []
     for ceremony in all_data:
         for award in ceremony.get("awards", []):
-            rows.append({
-                "ceremony_number": ceremony.get("ceremony_number"),
-                "year": ceremony.get("year"),
-                "date": ceremony.get("date"),
-                "url": ceremony.get("url"),
-                "category": award.get("category"),
-                "winner": award.get("winner"),
-                "nominees": " | ".join(award.get("nominees", [])),
-            })
+            rows.append(
+                {
+                    "ceremony_number": ceremony.get("ceremony_number"),
+                    "year": ceremony.get("year"),
+                    "date": ceremony.get("date"),
+                    "url": ceremony.get("url"),
+                    "category": award.get("category"),
+                    "winner": award.get("winner"),
+                    "nominees": " | ".join(award.get("nominees", [])),
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def to_detailed_dataframe(all_data: list[dict]) -> pd.DataFrame:
+    """One row per nominee; position 0 = winner, then nominees in page order."""
+    rows = []
+    for ceremony in all_data:
+        for award in ceremony.get("awards", []):
+            category = award.get("category")
+            for position, (nominee, details) in enumerate(award.get("entries", [])):
+                rows.append(
+                    {
+                        "ceremony_number": ceremony.get("ceremony_number"),
+                        "year": ceremony.get("year"),
+                        "date": ceremony.get("date"),
+                        "url": ceremony.get("url"),
+                        "category": category,
+                        "position": position,
+                        "is_winner": position == 0,
+                        "nominee": nominee,
+                        "details": details or "",
+                        "film": extract_film(category, details),
+                    }
+                )
     return pd.DataFrame(rows)
 
 
@@ -305,7 +411,23 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--start", type=int, default=1929)
     parser.add_argument("--end", type=int, default=2026)
+    parser.add_argument(
+        "--detailed",
+        action="store_true",
+        help="write one row per nominee (with details and film) to all_data_oscars_detailed.csv/.json",
+    )
     args = parser.parse_args()
+
+    if args.detailed:
+        df_detailed = to_detailed_dataframe(scrape_all_wiki(args.start, args.end, detailed=True))
+        SCRAPING_DIR.mkdir(parents=True, exist_ok=True)
+        df_detailed.to_csv(SCRAPING_DIR / "all_data_oscars_detailed.csv", index=False, encoding="utf-8")
+        df_detailed.to_json(
+            SCRAPING_DIR / "all_data_oscars_detailed.json", orient="records", force_ascii=False, indent=2
+        )
+        print(f"Files written to: {SCRAPING_DIR.relative_to(SCRAPING_DIR.parents[2])}")
+        print(f"Rows: {len(df_detailed)}")
+        return
 
     df_all_data = to_dataframe(scrape_all_wiki(args.start, args.end))
 

@@ -52,7 +52,7 @@ def download(session: requests.Session, name: str) -> None:
                 f.write(chunk)
                 bar.update(len(chunk))
     if tmp.stat().st_size != expected:
-        raise IOError(f"{name}: taille {tmp.stat().st_size} != {expected} attendue")
+        raise OSError(f"{name}: taille {tmp.stat().st_size} != {expected} attendue")
     tmp.replace(dest)
 
 

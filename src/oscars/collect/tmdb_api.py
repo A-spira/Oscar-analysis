@@ -13,12 +13,14 @@ La cle API est lue dans .env (TMDB_API_KEY) et masquee dans tout message d'erreu
 Usage :
   uv run python -m oscars.collect.tmdb_api --test tt0457430   # 1 appel test, rien n'est ecrit
   uv run python -m oscars.collect.tmdb_api                    # enrichissement complet (incremental)
+  uv run python -m oscars.collect.tmdb_api --universe         # whole eligible universe -> tmdb_universe_cache.parquet
 """
 
 import argparse
 import os
 import re
 import time
+from dataclasses import dataclass
 
 import pandas as pd
 import requests
@@ -29,6 +31,7 @@ from oscars.paths import ENV_FILE, IMDB_DIR, SCRAPING_DIR, TMDB_DIR
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
 RATE_LIMIT_SLEEP = 0.05  # 20 req/s, en dessous de la limite TMDb (~50 req/s)
 TMDB_CACHE_PATH = TMDB_DIR / "tmdb_cache.parquet"
+TMDB_UNIVERSE_CACHE_PATH = TMDB_DIR / "tmdb_universe_cache.parquet"
 SAVE_EVERY = 50
 
 # ---------------------------------------------------------------------------
@@ -264,7 +267,7 @@ def match_person_to_film(person_name, oscar_year, oscar_category, name_lookup, f
 
 def _group_to_lists(df: pd.DataFrame, key: str, values: list) -> dict:
     """{key: [tuple(values), ...]} en conservant l'ordre des lignes (equivaut au groupby().apply du notebook)."""
-    out = {}
+    out: dict = {}
     for row in df[[key, *values]].itertuples(index=False, name=None):
         out.setdefault(row[0], []).append(row[1:] if len(values) > 1 else row[1])
     return out
@@ -441,10 +444,135 @@ def enrich(api_key: str) -> None:
         print(tmdb_df[tmdb_df["error"].notna()]["error"].value_counts().to_string())
 
 
+# ---------------------------------------------------------------------------
+# 5. Eligible universe (all films that could have been nominated)
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class UniverseFilters:
+    """Thresholds defining the eligible film universe (IMDb basics + ratings)."""
+
+    min_year: int = 1999
+    max_year: int = 2025
+    min_runtime: int = 60
+    min_votes: int = 10_000
+    min_rating: float = 5.0
+    exclude_genre: str = "Documentary"
+
+
+def load_universe_tconsts(filters: UniverseFilters) -> list[str]:
+    """tconst of the eligible universe, read in chunks with the same parsing as `load_imdb_movies`."""
+    basics_parts: list[pd.DataFrame] = []
+    for chunk in _read_tsv_chunks("title.basics.tsv.gz", dtype=str, on_bad_lines="skip"):
+        chunk = chunk[chunk["titleType"] == "movie"]
+        year = pd.to_numeric(chunk["startYear"], errors="coerce")
+        runtime = pd.to_numeric(chunk["runtimeMinutes"], errors="coerce")
+        is_adult = pd.to_numeric(chunk["isAdult"], errors="coerce")
+        no_excluded_genre = ~chunk["genres"].fillna("").str.contains(filters.exclude_genre, regex=False)
+        keep = (
+            (is_adult == 0)
+            & year.between(filters.min_year, filters.max_year)
+            & (runtime >= filters.min_runtime)
+            & no_excluded_genre
+        )
+        basics_parts.append(chunk.loc[keep, ["tconst"]])
+    basics = pd.concat(basics_parts, ignore_index=True)
+
+    ratings = pd.read_csv(IMDB_DIR / "title.ratings.tsv.gz", sep="\t", na_values="\\N")
+    ratings = ratings[(ratings["numVotes"] >= filters.min_votes) & (ratings["averageRating"] >= filters.min_rating)]
+
+    universe = basics.merge(ratings[["tconst"]], on="tconst", how="inner")
+    return universe["tconst"].drop_duplicates().sort_values().tolist()
+
+
+def _print_summary(df: pd.DataFrame) -> None:
+    n_errors = int(df["error"].notna().sum())
+    print(f"\nTotal films in cache : {len(df)}")
+    print(f"Errors               : {n_errors} ({100 * n_errors / len(df):.1f}%)")
+    print(f"Success              : {100 * (1 - n_errors / len(df)):.1f}%")
+    if n_errors > 0:
+        print("\nErrors by type:")
+        print(df[df["error"].notna()]["error"].value_counts().to_string())
+
+
+def enrich_universe(api_key: str, filters: UniverseFilters) -> None:
+    """Enrich every film of the eligible universe into TMDB_UNIVERSE_CACHE_PATH.
+
+    Rows already in the nominee cache (tmdb_cache.parquet, read-only here) are copied instead of re-fetched.
+    The universe cache is incremental: rerunning only fetches tconst missing from it.
+    """
+    universe = load_universe_tconsts(filters)
+    universe_set = set(universe)
+    print(f"Eligible universe ({filters}) : {len(universe):,} films")
+
+    if TMDB_UNIVERSE_CACHE_PATH.exists():
+        cache_df = pd.read_parquet(TMDB_UNIVERSE_CACHE_PATH)
+        print(f"Existing universe cache        : {len(cache_df)} rows")
+    else:
+        cache_df = pd.DataFrame()
+
+    already = set(cache_df["tconst"]) if not cache_df.empty else set()
+    if TMDB_CACHE_PATH.exists():
+        nominee_cache = pd.read_parquet(TMDB_CACHE_PATH)
+        reused = nominee_cache[nominee_cache["tconst"].isin(universe_set - already)]
+        print(f"Reused from nominee cache      : {len(reused)} rows")
+        if not reused.empty:
+            cache_df = reused.copy() if cache_df.empty else pd.concat([cache_df, reused], ignore_index=True)
+            already |= set(reused["tconst"])
+
+    to_fetch = [t for t in universe if t not in already]
+    print(f"To fetch from TMDb             : {len(to_fetch)}")
+    print(f"Time estimate (~20 req/s)      : ~{len(to_fetch) * 2 * RATE_LIMIT_SLEEP:.0f}s")
+
+    TMDB_DIR.mkdir(parents=True, exist_ok=True)
+    cache_df.to_parquet(TMDB_UNIVERSE_CACHE_PATH, index=False)
+    new_records: list[dict] = []
+    if to_fetch:
+        with requests.Session() as session:
+            for i, tconst in enumerate(to_fetch, 1):
+                new_records.append(fetch_tmdb(session, api_key, tconst))
+                time.sleep(RATE_LIMIT_SLEEP)
+
+                if i % SAVE_EVERY == 0 or i == len(to_fetch):
+                    partial_df = pd.concat([cache_df, pd.DataFrame(new_records)], ignore_index=True)
+                    partial_df.to_parquet(TMDB_UNIVERSE_CACHE_PATH, index=False)
+                    err_count = pd.DataFrame(new_records)["error"].notna().sum()
+                    print(f"  [{i:5d}/{len(to_fetch)}] flush -> cache: {len(partial_df)} | errors: {err_count}")
+
+    tmdb_df = pd.read_parquet(TMDB_UNIVERSE_CACHE_PATH)
+    tmdb_df = tmdb_df[tmdb_df["tconst"].isin(universe_set)]
+    _print_summary(tmdb_df)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--test", metavar="TCONST", help="un seul appel test, sans ecrire le cache")
+    parser.add_argument("--universe", action="store_true", help="enrich the whole eligible universe (new cache)")
+    parser.add_argument("--dry-run", action="store_true", help="with --universe: only count films, no API call")
+    defaults = UniverseFilters()
+    parser.add_argument("--min-year", type=int, default=defaults.min_year)
+    parser.add_argument("--max-year", type=int, default=defaults.max_year)
+    parser.add_argument("--min-runtime", type=int, default=defaults.min_runtime, help="minutes")
+    parser.add_argument("--min-votes", type=int, default=defaults.min_votes, help="IMDb numVotes")
+    parser.add_argument("--min-rating", type=float, default=defaults.min_rating, help="IMDb averageRating")
+    parser.add_argument("--exclude-genre", default=defaults.exclude_genre)
     args = parser.parse_args()
+
+    if args.universe:
+        filters = UniverseFilters(
+            min_year=args.min_year,
+            max_year=args.max_year,
+            min_runtime=args.min_runtime,
+            min_votes=args.min_votes,
+            min_rating=args.min_rating,
+            exclude_genre=args.exclude_genre,
+        )
+        if args.dry_run:
+            print(f"Eligible universe ({filters}) : {len(load_universe_tconsts(filters)):,} films")
+            return
+        enrich_universe(load_api_key(), filters)
+        return
 
     api_key = load_api_key()
     if args.test:

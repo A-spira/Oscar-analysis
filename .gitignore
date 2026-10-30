@@ -47,3 +47,6 @@ data/raw/imdb/*.tsv.gz
 # Explicit lowercase rules (the Data/Raw/IMDb/ rule above only matches on case-insensitive filesystems)
 data/raw/imdb/
 scratch/
+
+# Pipeline cache (rebuilt by `oscars.pipeline --from-raw`)
+data/interim/

@@ -4,33 +4,79 @@ Analysis of Academy Award nominations (1929–2026) built from Wikipedia, IMDb a
 
 ## Question & scope
 
-TODO
+**Decision makers**
+
+1. **Studios**: which films to back with a *For Your Consideration* campaign, months before nominations.
+2. **Luxury houses**: which actors and actresses to dress or sign before awards season.
+
+**Question**: among eligible films and talents, which characteristics known about 6 months before
+nominations (release month, genre, budget, original language, prior Oscar record) are associated with a
+higher nomination rate? Ceremonies 2000–2026, 7 categories:
+
+- **Studio view**: Best Picture, Best Director, Best Original Screenplay
+- **Talent view**: Best Actor, Best Actress, Best Supporting Actor, Best Supporting Actress
+
+**KPIs**
+
+- `nomination_rate = nominated / eligible`
+- `lift = segment rate / overall rate of the category`
+- always report `n` (number of eligible rows in the segment)
 
 ## Data collection
 
-Requires [uv](https://docs.astral.sh/uv/) and Python 3.12. Copy `.env.example` to `.env` and set your own
-[TMDb API key](https://www.themoviedb.org/settings/api) in `TMDB_API_KEY`.
+Requires [uv](https://docs.astral.sh/uv/) and Python 3.12. Create a `.env` file at the project root containing
+`TMDB_API_KEY=<your key>` ([TMDb API key](https://www.themoviedb.org/settings/api)); it is gitignored.
 
 ```bash
 uv sync
 
 # 1. Oscar nominations scraped from Wikipedia -> data/raw/scraping/all_data_oscars.{csv,json}
 uv run python -m oscars.collect.scrape_wikipedia
+#    same scrape, 1 row per nominee with the film of person nominations -> all_data_oscars_detailed.{csv,json}
+uv run python -m oscars.collect.scrape_wikipedia --detailed
 
 # 2. IMDb non-commercial datasets -> data/raw/imdb/*.tsv.gz (~1.4 GB, not versioned)
 uv run python -m oscars.collect.imdb_download --list   # show files and sizes only
 uv run python -m oscars.collect.imdb_download
 
-# 3. TMDb enrichment (needs steps 1 and 2) -> data/raw/tmdb/tmdb_cache.parquet
+# 3. TMDb enrichment (needs steps 1 and 2), incremental caches in data/raw/tmdb/
 uv run python -m oscars.collect.tmdb_api --test tt0457430   # single test call, writes nothing
-uv run python -m oscars.collect.tmdb_api                    # full run, incremental cache
+uv run python -m oscars.collect.tmdb_api                    # nominated films -> tmdb_cache.parquet
+uv run python -m oscars.collect.tmdb_api --universe         # eligible universe -> tmdb_universe_cache.parquet
 ```
 
 Sources, extraction dates and reuse terms are documented in [`data/raw/MANIFEST.md`](data/raw/MANIFEST.md).
 
 ## Pipeline
 
-TODO
+Raw data → analytical tables, no network access and no notebook logic:
+
+```bash
+uv run python -m oscars.pipeline --from-raw   # full rebuild, re-parses the raw IMDb files (~5 min)
+uv run python -m oscars.pipeline              # same, reuses the parsed IMDb cache in data/interim/
+```
+
+| Module | Role |
+|---|---|
+| `src/oscars/clean.py` | Parsing, types, category normalisation, long format (1 row = 1 nominee); IMDb filtered cache; TMDb caches (budget 0 → NA) |
+| `src/oscars/integrate.py` | Oscar ↔ IMDb matching (films by title, persons by name + the film named on Wikipedia), TMDb merge, match rates |
+| `src/oscars/build_analytical.py` | Eligible universe (`UniverseParams` thresholds), re-injection of all real nominees, descriptive variables |
+| `src/oscars/checks.py` | Reusable checks: table grain and key uniqueness, guarded joins (no row multiplication), match rates, outliers |
+| `src/oscars/pipeline.py` | Entry point |
+
+Outputs in `data/output/`:
+
+| File | Grain (1 row =) |
+|---|---|
+| `film_universe.csv` | 1 eligible film × studio category × ceremony |
+| `talent_universe.csv` | 1 actor/actress × eligible film × talent category × ceremony |
+| `unmatched_nominations.csv` | 1 Oscar nomination 2000+ not matched to IMDb, with its probable reason |
+| `integration_report.json` | All counts, match rates and quality checks of the run |
+
+Hand-checked match corrections live in `data/reference/match_overrides.csv`; every data-quality decision
+is logged in [`docs/decision_log.md`](docs/decision_log.md).
+
+Code quality: `uv run ruff check src`, `uv run ruff format --check src`, `uv run mypy src/oscars --ignore-missing-imports`.
 
 ## Tableau
 

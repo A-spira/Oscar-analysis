@@ -1,0 +1,525 @@
+year,category,nominee,winner,nominee_type,probable_reason
+2000,Best Documentary Short Film,King Gimp,True,film,short_film_not_in_imdb_movie_type
+2000,Best Documentary Short Film,Eyewitness,False,film,short_film_not_in_imdb_movie_type
+2000,Best Documentary Short Film,The Wildest Show in the South: The Angola Prison Rodeo,False,film,short_film_not_in_imdb_movie_type
+2000,Best Short Film (Live Action),My Mother Dreams the Satan's Disciples in New York,True,film,short_film_not_in_imdb_movie_type
+2000,Best Short Film (Live Action),"Bror, Min Bror",False,film,short_film_not_in_imdb_movie_type
+2000,Best Short Film (Live Action),Killing Joe,False,film,short_film_not_in_imdb_movie_type
+2000,Best Short Film (Live Action),Kleingeld,False,film,short_film_not_in_imdb_movie_type
+2000,Best Short Film (Live Action),Major and Minor Miracles,False,film,short_film_not_in_imdb_movie_type
+2000,Best Short Film (Animated),The Old Man and the Sea,True,film,title_found_outside_year_window
+2000,Best Short Film (Animated),3 Misses,False,film,short_film_not_in_imdb_movie_type
+2000,Best Short Film (Animated),Humdrum,False,film,short_film_not_in_imdb_movie_type
+2000,Best Short Film (Animated),My Grandmother Ironed the King's Shirts,False,film,short_film_not_in_imdb_movie_type
+2000,Best Short Film (Animated),When the Day Breaks,False,film,short_film_not_in_imdb_movie_type
+2000,Best Music (Original Song),"""You'll Be in My Heart"" from Tarzan",True,film,song_title_not_a_film_title
+2000,Best Music (Original Song),"""Blame Canada"" from South Park: Bigger, Longer & Uncut",False,film,song_title_not_a_film_title
+2000,Best Music (Original Song),"""Music of My Heart"" from Music of the Heart",False,film,song_title_not_a_film_title
+2000,Best Music (Original Song),"""Save Me"" from Magnolia",False,film,song_title_not_a_film_title
+2000,Best Music (Original Song),"""When She Loved Me"" from Toy Story 2",False,film,song_title_not_a_film_title
+2000,Best Sound,Star Wars: Episode I,False,film,title_not_found_in_imdb_movies
+2000,Best Sound Editing,Star Wars: Episode I,False,film,title_not_found_in_imdb_movies
+2000,Best Visual Effects,Star Wars: Episode I,False,film,title_not_found_in_imdb_movies
+2001,Best Documentary Short Film,Big Mama,True,film,short_film_not_in_imdb_movie_type
+2001,Best Documentary Short Film,Curtain Call,False,film,title_found_outside_year_window
+2001,Best Documentary Short Film,Dolphins,False,film,title_found_outside_year_window
+2001,Best Documentary Short Film,The Man on Lincoln's Nose,False,film,short_film_not_in_imdb_movie_type
+2001,Best Short Film (Live Action),Quiero ser (I want to be...),True,film,short_film_not_in_imdb_movie_type
+2001,Best Short Film (Live Action),By Courier,False,film,short_film_not_in_imdb_movie_type
+2001,Best Short Film (Live Action),One Day Crossing,False,film,short_film_not_in_imdb_movie_type
+2001,Best Short Film (Live Action),Seraglio,False,film,short_film_not_in_imdb_movie_type
+2001,Best Short Film (Live Action),A Soccer Story,False,film,short_film_not_in_imdb_movie_type
+2001,Best Short Film (Animated),Father and Daughter,True,film,title_found_outside_year_window
+2001,Best Short Film (Animated),Periwig Maker,False,film,short_film_not_in_imdb_movie_type
+2001,Best Short Film (Animated),Rejected,False,film,title_found_outside_year_window
+2001,Best Music (Original Song),"""Things Have Changed"" from Wonder Boys",True,film,song_title_not_a_film_title
+2001,Best Music (Original Song),"""A Fool In Love"" from Meet the Parents",False,film,song_title_not_a_film_title
+2001,Best Music (Original Song),"""I've Seen It All"" from Dancer in the Dark",False,film,song_title_not_a_film_title
+2001,Best Music (Original Song),"""A Love Before Time"" from Crouching Tiger, Hidden Dragon",False,film,song_title_not_a_film_title
+2001,Best Music (Original Song),"""My Funny Friend and Me"" from The Emperor's New Groove",False,film,song_title_not_a_film_title
+2002,Best International Feature Film,Lagaan (India) in Hindi,False,film,title_not_found_in_imdb_movies
+2002,Best Documentary Feature Film,LaLee's Kin: The Legacy of Cotton,False,film,title_not_found_in_imdb_movies
+2002,Best Documentary Short Film,Thoth,True,film,short_film_not_in_imdb_movie_type
+2002,Best Documentary Short Film,Artists and Orphans: A True Drama,False,film,short_film_not_in_imdb_movie_type
+2002,Best Documentary Short Film,Sing!,False,film,title_found_outside_year_window
+2002,Best Short Film (Live Action),Copy Shop,False,film,short_film_not_in_imdb_movie_type
+2002,Best Short Film (Live Action),Gregor's Greatest Invention,False,film,short_film_not_in_imdb_movie_type
+2002,Best Short Film (Live Action),A Man Thing (Meska Sprawa),False,film,short_film_not_in_imdb_movie_type
+2002,Best Short Film (Live Action),Speed for Thespians,False,film,short_film_not_in_imdb_movie_type
+2002,Best Short Film (Animated),For the Birds,True,film,title_found_outside_year_window
+2002,Best Short Film (Animated),Fifty Percent Grey,False,film,short_film_not_in_imdb_movie_type
+2002,Best Short Film (Animated),Give Up Yer Aul Sins,False,film,short_film_not_in_imdb_movie_type
+2002,Best Short Film (Animated),Strange Invaders,False,film,short_film_not_in_imdb_movie_type
+2002,Best Short Film (Animated),Stubble Trouble,False,film,short_film_not_in_imdb_movie_type
+2002,Best Music (Original Song),"""If I Didn't Have You"" from Monsters, Inc.",True,film,song_title_not_a_film_title
+2002,Best Music (Original Song),"""May It Be"" from The Lord of the Rings: The Fellowship of the Ring",False,film,song_title_not_a_film_title
+2002,Best Music (Original Song),"""There You'll Be"" from Pearl Harbor",False,film,song_title_not_a_film_title
+2002,Best Music (Original Song),"""Until..."" from Kate & Leopold",False,film,song_title_not_a_film_title
+2002,Best Music (Original Song),"""Vanilla Sky"" from Vanilla Sky",False,film,song_title_not_a_film_title
+2003,Best International Feature Film,The Crime of Father Amaro (Mexico) in Spanish,False,film,title_found_outside_year_window
+2003,Best Documentary Short Film,Twin Towers,True,film,short_film_not_in_imdb_movie_type
+2003,Best Documentary Short Film,The Collector of Bedford Street,False,film,short_film_not_in_imdb_movie_type
+2003,Best Documentary Short Film,Mighty Times: The Legacy of Rosa Parks,False,film,short_film_not_in_imdb_movie_type
+2003,Best Documentary Short Film,Why Can't We Be a Family Again?,False,film,short_film_not_in_imdb_movie_type
+2003,Best Short Film (Live Action),This Charming Man,True,film,short_film_not_in_imdb_movie_type
+2003,Best Short Film (Live Action),Fait D'Hiver,False,film,short_film_not_in_imdb_movie_type
+2003,Best Short Film (Live Action),I'll Wait for the Next One ... (J'Attendrai Le Suivant...),False,film,short_film_not_in_imdb_movie_type
+2003,Best Short Film (Live Action),Inja (Dog),False,film,short_film_not_in_imdb_movie_type
+2003,Best Short Film (Live Action),Johnny Flynton,False,film,short_film_not_in_imdb_movie_type
+2003,Best Short Film (Animated),The ChubbChubbs!,True,film,short_film_not_in_imdb_movie_type
+2003,Best Short Film (Animated),Das Rad,False,film,short_film_not_in_imdb_movie_type
+2003,Best Short Film (Animated),The Cathedral,False,film,title_found_outside_year_window
+2003,Best Short Film (Animated),Mike's New Car,False,film,short_film_not_in_imdb_movie_type
+2003,Best Short Film (Animated),Mt. Head,False,film,short_film_not_in_imdb_movie_type
+2003,Best Music (Original Song),"""Lose Yourself"" from 8 Mile",True,film,song_title_not_a_film_title
+2003,Best Music (Original Song),"""Burn It Blue"" from Frida",False,film,song_title_not_a_film_title
+2003,Best Music (Original Song),"""Father and Daughter"" from The Wild Thornberrys Movie",False,film,song_title_not_a_film_title
+2003,Best Music (Original Song),"""The Hands That Built America"" from Gangs of New York",False,film,song_title_not_a_film_title
+2003,Best Music (Original Song),"""I Move On"" from Chicago",False,film,song_title_not_a_film_title
+2003,Best Visual Effects,Star Wars: Episode II,False,film,title_not_found_in_imdb_movies
+2004,Best Documentary Feature Film,Balseros,False,film,title_not_found_in_imdb_movies
+2004,Best Documentary Short Film,Chernobyl Heart,True,film,short_film_not_in_imdb_movie_type
+2004,Best Documentary Short Film,Ferry Tales,False,film,short_film_not_in_imdb_movie_type
+2004,Best Short Film (Live Action),Two Soldiers,True,film,short_film_not_in_imdb_movie_type
+2004,Best Short Film (Live Action),Die Rote Jacke (The Red Jacket),False,film,short_film_not_in_imdb_movie_type
+2004,Best Short Film (Live Action),Most (The Bridge),False,film,title_found_outside_year_window
+2004,Best Short Film (Live Action),Squash,False,film,short_film_not_in_imdb_movie_type
+2004,Best Short Film (Live Action),(A) Torzija [(A) Torsion],False,film,short_film_not_in_imdb_movie_type
+2004,Best Short Film (Animated),Harvie Krumpet,True,film,short_film_not_in_imdb_movie_type
+2004,Best Short Film (Animated),Boundin',False,film,short_film_not_in_imdb_movie_type
+2004,Best Short Film (Animated),Destino,False,film,title_found_outside_year_window
+2004,Best Short Film (Animated),Gone Nutty,False,film,short_film_not_in_imdb_movie_type
+2004,Best Short Film (Animated),Nibbles,False,film,short_film_not_in_imdb_movie_type
+2004,Best Music (Original Song),"""Into the West"" from The Lord of the Rings: The Return of the King",True,film,song_title_not_a_film_title
+2004,Best Music (Original Song),"""Belleville Rendez-vous"" from The Triplets of Belleville",False,film,song_title_not_a_film_title
+2004,Best Music (Original Song),"""A Kiss at the End of the Rainbow"" from A Mighty Wind",False,film,song_title_not_a_film_title
+2004,Best Music (Original Song),"""Scarlet Tide"" from Cold Mountain",False,film,song_title_not_a_film_title
+2004,Best Music (Original Song),"""You Will Be My Ain True Love"" from Cold Mountain",False,film,song_title_not_a_film_title
+2005,Best International Feature Film,"The Sea Inside (Spain) in Spanish , Catalan and Galician",True,film,title_not_found_in_imdb_movies
+2005,Best Documentary Short Film,Mighty Times: The Children's March,True,film,short_film_not_in_imdb_movie_type
+2005,Best Documentary Short Film,Autism Is a World,False,film,short_film_not_in_imdb_movie_type
+2005,Best Documentary Short Film,The Children of Leningradsky,False,film,short_film_not_in_imdb_movie_type
+2005,Best Documentary Short Film,Hardwood,False,film,short_film_not_in_imdb_movie_type
+2005,Best Documentary Short Film,Sister Rose's Passion,False,film,short_film_not_in_imdb_movie_type
+2005,Best Short Film (Live Action),Wasp,True,film,title_found_outside_year_window
+2005,Best Short Film (Live Action),7:35 in the Morning,False,film,short_film_not_in_imdb_movie_type
+2005,Best Short Film (Live Action),Everything in This Country Must,False,film,short_film_not_in_imdb_movie_type
+2005,Best Short Film (Live Action),Little Terrorist,False,film,short_film_not_in_imdb_movie_type
+2005,Best Short Film (Live Action),"Two Cars, One Night",False,film,short_film_not_in_imdb_movie_type
+2005,Best Short Film (Animated),Ryan,True,film,title_found_outside_year_window
+2005,Best Short Film (Animated),Birthday Boy,False,film,title_found_outside_year_window
+2005,Best Short Film (Animated),Gopher Broke,False,film,short_film_not_in_imdb_movie_type
+2005,Best Short Film (Animated),Guard Dog,False,film,title_found_outside_year_window
+2005,Best Short Film (Animated),Lorenzo,False,film,short_film_not_in_imdb_movie_type
+2005,Best Music (Original Score),Lemony Snicket's A Series of Unfortunate Events,False,film,title_not_found_in_imdb_movies
+2005,Best Music (Original Song),"""Al otro lado del río"" from The Motorcycle Diaries",True,film,song_title_not_a_film_title
+2005,Best Music (Original Song),"""Accidentally in Love"" from Shrek 2",False,film,song_title_not_a_film_title
+2005,Best Music (Original Song),"""Believe"" from The Polar Express",False,film,song_title_not_a_film_title
+2005,Best Music (Original Song),"""Learn to Be Lonely"" from The Phantom of the Opera",False,film,song_title_not_a_film_title
+2005,Best Music (Original Song),"""Look to Your Path (Vois sur ton chemin)"" from The Chorus",False,film,song_title_not_a_film_title
+2005,Best Production Design,Lemony Snicket's A Series of Unfortunate Events,False,film,title_not_found_in_imdb_movies
+2005,Best Makeup and Hairstyling,Lemony Snicket's A Series of Unfortunate Events,True,film,title_not_found_in_imdb_movies
+2005,Best Costume Design,Lemony Snicket's A Series of Unfortunate Events,False,film,title_not_found_in_imdb_movies
+2006,Best Animated Feature Film,Tim Burton's Corpse Bride,False,film,title_not_found_in_imdb_movies
+2006,Best International Feature Film,Sophie Scholl,False,film,title_not_found_in_imdb_movies
+2006,Best Documentary Short Film,A Note of Triumph: The Golden Age of Norman Corwin,True,film,short_film_not_in_imdb_movie_type
+2006,Best Documentary Short Film,The Death of Kevin Carter: Casualty of the Bang Bang Club,False,film,short_film_not_in_imdb_movie_type
+2006,Best Documentary Short Film,God Sleeps in Rwanda,False,film,short_film_not_in_imdb_movie_type
+2006,Best Documentary Short Film,The Mushroom Club,False,film,short_film_not_in_imdb_movie_type
+2006,Best Short Film (Live Action),Six Shooter,True,film,short_film_not_in_imdb_movie_type
+2006,Best Short Film (Live Action),The Last Farm,False,film,short_film_not_in_imdb_movie_type
+2006,Best Short Film (Live Action),Our Time Is Up,False,film,short_film_not_in_imdb_movie_type
+2006,Best Short Film (Live Action),The Runaway (Ausreißer),False,film,title_found_outside_year_window
+2006,Best Short Film (Animated),The Moon and the Son: An Imagined Conversation,True,film,short_film_not_in_imdb_movie_type
+2006,Best Short Film (Animated),9,False,film,title_found_outside_year_window
+2006,Best Short Film (Animated),Badgered,False,film,short_film_not_in_imdb_movie_type
+2006,Best Short Film (Animated),The Mysterious Geographic Explorations of Jasper Morello,False,film,short_film_not_in_imdb_movie_type
+2006,Best Short Film (Animated),One Man Band,False,film,short_film_not_in_imdb_movie_type
+2006,Best Music (Original Song),"""It's Hard out Here for a Pimp"" from Hustle & Flow",True,film,song_title_not_a_film_title
+2006,Best Music (Original Song),"""In the Deep"" from Crash",False,film,song_title_not_a_film_title
+2006,Best Music (Original Song),"""Travelin' Thru"" from Transamerica",False,film,song_title_not_a_film_title
+2006,Best Makeup and Hairstyling,Star Wars: Episode III,False,film,title_not_found_in_imdb_movies
+2007,Best International Feature Film,"After the Wedding (Denmark) in Danish , Hindi , and Swedish",False,film,title_not_found_in_imdb_movies
+2007,Best Documentary Short Film,The Blood of Yingzhou District,True,film,short_film_not_in_imdb_movie_type
+2007,Best Documentary Short Film,Recycled Life,False,film,short_film_not_in_imdb_movie_type
+2007,Best Documentary Short Film,Rehearsing a Dream,False,film,short_film_not_in_imdb_movie_type
+2007,Best Documentary Short Film,Two Hands,False,film,title_found_outside_year_window
+2007,Best Short Film (Live Action),West Bank Story,True,film,short_film_not_in_imdb_movie_type
+2007,Best Short Film (Live Action),Binta and the Great Idea,False,film,short_film_not_in_imdb_movie_type
+2007,Best Short Film (Live Action),Éramos pocos (One Too Many),False,film,short_film_not_in_imdb_movie_type
+2007,Best Short Film (Live Action),Helmer & Son,False,film,short_film_not_in_imdb_movie_type
+2007,Best Short Film (Live Action),The Saviour,False,film,short_film_not_in_imdb_movie_type
+2007,Best Short Film (Animated),The Danish Poet,True,film,short_film_not_in_imdb_movie_type
+2007,Best Short Film (Animated),Lifted,False,film,title_found_outside_year_window
+2007,Best Short Film (Animated),The Little Matchgirl,False,film,short_film_not_in_imdb_movie_type
+2007,Best Short Film (Animated),Maestro,False,film,title_found_outside_year_window
+2007,Best Short Film (Animated),No Time for Nuts,False,film,short_film_not_in_imdb_movie_type
+2007,Best Music (Original Song),"""I Need to Wake Up"" from An Inconvenient Truth",True,film,song_title_not_a_film_title
+2007,Best Music (Original Song),"""Listen"" from Dreamgirls",False,film,song_title_not_a_film_title
+2007,Best Music (Original Song),"""Love You I Do"" from Dreamgirls",False,film,song_title_not_a_film_title
+2007,Best Music (Original Song),"""Our Town"" from Cars",False,film,song_title_not_a_film_title
+2007,Best Music (Original Song),"""Patience"" from Dreamgirls",False,film,song_title_not_a_film_title
+2008,Best International Feature Film,Mongol (Kazakhstan) in Russian,False,film,title_found_outside_year_window
+2008,Best Documentary Short Film,Freeheld,True,film,title_found_outside_year_window
+2008,Best Documentary Short Film,La Corona,False,film,short_film_not_in_imdb_movie_type
+2008,Best Documentary Short Film,Salim Baba,False,film,short_film_not_in_imdb_movie_type
+2008,Best Documentary Short Film,Sari's Mother,False,film,short_film_not_in_imdb_movie_type
+2008,Best Short Film (Live Action),Le Mozart des Pickpockets (The Mozart of Pickpockets),True,film,short_film_not_in_imdb_movie_type
+2008,Best Short Film (Live Action),At Night,False,film,title_found_outside_year_window
+2008,Best Short Film (Live Action),(Il Supplente) The Substitute,False,film,short_film_not_in_imdb_movie_type
+2008,Best Short Film (Live Action),Tanghi Argentini,False,film,short_film_not_in_imdb_movie_type
+2008,Best Short Film (Live Action),The Tonto Woman,False,film,short_film_not_in_imdb_movie_type
+2008,Best Short Film (Animated),Peter & the Wolf,True,film,short_film_not_in_imdb_movie_type
+2008,Best Short Film (Animated),Even Pigeons Go to Heaven (Même les pigeons vont au paradis),False,film,short_film_not_in_imdb_movie_type
+2008,Best Short Film (Animated),I Met the Walrus,False,film,short_film_not_in_imdb_movie_type
+2008,Best Short Film (Animated),Madame Tutli-Putli,False,film,short_film_not_in_imdb_movie_type
+2008,Best Music (Original Song),"""Falling Slowly"" from Once",True,film,song_title_not_a_film_title
+2008,Best Music (Original Song),"""Happy Working Song"" from Enchanted",False,film,song_title_not_a_film_title
+2008,Best Music (Original Song),"""Raise It Up"" from August Rush",False,film,song_title_not_a_film_title
+2008,Best Music (Original Song),"""So Close"" from Enchanted",False,film,song_title_not_a_film_title
+2008,Best Music (Original Song),"""That's How You Know"" from Enchanted",False,film,song_title_not_a_film_title
+2009,Best Documentary Short Film,Smile Pinki,True,film,short_film_not_in_imdb_movie_type
+2009,Best Documentary Short Film,The Conscience of Nhem En,False,film,short_film_not_in_imdb_movie_type
+2009,Best Documentary Short Film,The Final Inch,False,film,short_film_not_in_imdb_movie_type
+2009,Best Documentary Short Film,The Witness: From the Balcony of Room 306,False,film,short_film_not_in_imdb_movie_type
+2009,Best Short Film (Live Action),Toyland (Spielzeugland),True,film,title_found_outside_year_window
+2009,Best Short Film (Live Action),Manon on the Asphalt,False,film,short_film_not_in_imdb_movie_type
+2009,Best Short Film (Live Action),New Boy,False,film,short_film_not_in_imdb_movie_type
+2009,Best Short Film (Live Action),On the Line (Auf der Strecke),False,film,title_found_outside_year_window
+2009,Best Short Film (Live Action),The Pig (Grisen),False,film,short_film_not_in_imdb_movie_type
+2009,Best Short Film (Animated),La Maison en Petits Cubes,True,film,short_film_not_in_imdb_movie_type
+2009,Best Short Film (Animated),Lavatory,False,film,short_film_not_in_imdb_movie_type
+2009,Best Short Film (Animated),Oktapodi,False,film,short_film_not_in_imdb_movie_type
+2009,Best Short Film (Animated),Presto,False,film,short_film_not_in_imdb_movie_type
+2009,Best Short Film (Animated),This Way Up,False,film,short_film_not_in_imdb_movie_type
+2009,Best Music (Original Song),"""Jai Ho"" from Slumdog Millionaire",True,film,song_title_not_a_film_title
+2009,Best Music (Original Song),"""Down to Earth"" from WALL-E",False,film,song_title_not_a_film_title
+2009,Best Music (Original Song),"""O Saya"" from Slumdog Millionaire",False,film,song_title_not_a_film_title
+2010,Best International Feature Film,"A Prophet (France) in French, Corsican and Arabic",False,film,title_not_found_in_imdb_movies
+2010,Best Documentary Feature Film,Burma VJ,False,film,title_not_found_in_imdb_movies
+2010,Best Documentary Short Film,Music by Prudence,True,film,short_film_not_in_imdb_movie_type
+2010,Best Documentary Short Film,China's Unnatural Disaster: The Tears of Sichuan Province,False,film,short_film_not_in_imdb_movie_type
+2010,Best Documentary Short Film,The Last Campaign of Governor Booth Gardner,False,film,short_film_not_in_imdb_movie_type
+2010,Best Documentary Short Film,The Last Truck: Closing of a GM Plant,False,film,short_film_not_in_imdb_movie_type
+2010,Best Short Film (Live Action),The New Tenants,True,film,short_film_not_in_imdb_movie_type
+2010,Best Short Film (Live Action),Instead of Abracadabra,False,film,short_film_not_in_imdb_movie_type
+2010,Best Short Film (Live Action),Kavi,False,film,short_film_not_in_imdb_movie_type
+2010,Best Short Film (Live Action),Miracle Fish,False,film,short_film_not_in_imdb_movie_type
+2010,Best Short Film (Animated),Logorama,True,film,short_film_not_in_imdb_movie_type
+2010,Best Short Film (Animated),French Roast,False,film,short_film_not_in_imdb_movie_type
+2010,Best Short Film (Animated),Granny O'Grimm's Sleeping Beauty,False,film,short_film_not_in_imdb_movie_type
+2010,Best Short Film (Animated),The Lady and the Reaper,False,film,short_film_not_in_imdb_movie_type
+2010,Best Short Film (Animated),A Matter of Loaf and Death,False,film,short_film_not_in_imdb_movie_type
+2010,Best Music (Original Song),"""The Weary Kind (Theme from Crazy Heart)"" from Crazy Heart",True,film,song_title_not_a_film_title
+2010,Best Music (Original Song),"""Almost There"" from The Princess and the Frog",False,film,song_title_not_a_film_title
+2010,Best Music (Original Song),"""Down in New Orleans"" from The Princess and the Frog",False,film,song_title_not_a_film_title
+2010,Best Music (Original Song),"""Loin de Paname"" from Paris 36",False,film,song_title_not_a_film_title
+2010,Best Music (Original Song),"""Take It All"" from Nine",False,film,song_title_not_a_film_title
+2011,Best Documentary Short Film,Strangers No More,True,film,short_film_not_in_imdb_movie_type
+2011,Best Documentary Short Film,Killing in the Name,False,film,short_film_not_in_imdb_movie_type
+2011,Best Documentary Short Film,Poster Girl,False,film,short_film_not_in_imdb_movie_type
+2011,Best Documentary Short Film,Sun Come Up,False,film,short_film_not_in_imdb_movie_type
+2011,Best Documentary Short Film,The Warriors of Qiugang,False,film,short_film_not_in_imdb_movie_type
+2011,Best Short Film (Live Action),God of Love,True,film,short_film_not_in_imdb_movie_type
+2011,Best Short Film (Live Action),The Crush,False,film,title_found_outside_year_window
+2011,Best Short Film (Live Action),Na Wewe,False,film,short_film_not_in_imdb_movie_type
+2011,Best Short Film (Live Action),Wish 143,False,film,short_film_not_in_imdb_movie_type
+2011,Best Short Film (Animated),The Lost Thing,True,film,short_film_not_in_imdb_movie_type
+2011,Best Short Film (Animated),Day & Night,False,film,title_found_outside_year_window
+2011,Best Short Film (Animated),The Gruffalo,False,film,short_film_not_in_imdb_movie_type
+2011,Best Short Film (Animated),Let's Pollute,False,film,short_film_not_in_imdb_movie_type
+2011,Best Short Film (Animated),"Madagascar, a Journey Diary",False,film,short_film_not_in_imdb_movie_type
+2011,Best Music (Original Song),"""We Belong Together"" from Toy Story 3",True,film,song_title_not_a_film_title
+2011,Best Music (Original Song),"""Coming Home"" from Country Strong",False,film,song_title_not_a_film_title
+2011,Best Music (Original Song),"""I See the Light"" from Tangled",False,film,song_title_not_a_film_title
+2011,Best Music (Original Song),"""If I Rise"" from 127 Hours",False,film,song_title_not_a_film_title
+2011,Best Production Design,Harry Potter and the Deathly Hallows,False,film,title_not_found_in_imdb_movies
+2011,Best Visual Effects,Harry Potter and the Deathly Hallows,False,film,title_not_found_in_imdb_movies
+2012,Best Animated Feature Film,Chico and Rita,False,film,title_not_found_in_imdb_movies
+2012,Best Documentary Short Film,Saving Face,True,film,title_found_outside_year_window
+2012,Best Documentary Short Film,The Barber of Birmingham: Foot Soldier of the Civil Rights Movement,False,film,short_film_not_in_imdb_movie_type
+2012,Best Documentary Short Film,God Is the Bigger Elvis,False,film,short_film_not_in_imdb_movie_type
+2012,Best Documentary Short Film,Incident in New Baghdad,False,film,short_film_not_in_imdb_movie_type
+2012,Best Documentary Short Film,The Tsunami and the Cherry Blossom,False,film,short_film_not_in_imdb_movie_type
+2012,Best Short Film (Live Action),The Shore,True,film,title_found_outside_year_window
+2012,Best Short Film (Live Action),Pentecost,False,film,short_film_not_in_imdb_movie_type
+2012,Best Short Film (Live Action),Raju,False,film,title_found_outside_year_window
+2012,Best Short Film (Live Action),Time Freak,False,film,title_found_outside_year_window
+2012,Best Short Film (Live Action),Tuba Atlantic,False,film,short_film_not_in_imdb_movie_type
+2012,Best Short Film (Animated),The Fantastic Flying Books of Mr. Morris Lessmore,True,film,short_film_not_in_imdb_movie_type
+2012,Best Short Film (Animated),La Luna,False,film,title_found_outside_year_window
+2012,Best Short Film (Animated),A Morning Stroll,False,film,short_film_not_in_imdb_movie_type
+2012,Best Music (Original Song),"""Man or Muppet"" from The Muppets",True,film,song_title_not_a_film_title
+2012,Best Music (Original Song),"""Real in Rio"" from Rio",False,film,song_title_not_a_film_title
+2012,Best Production Design,Harry Potter and the Deathly Hallows,False,film,title_not_found_in_imdb_movies
+2012,Best Makeup and Hairstyling,Harry Potter and the Deathly Hallows,False,film,title_not_found_in_imdb_movies
+2012,Best Visual Effects,Harry Potter and the Deathly Hallows,False,film,title_not_found_in_imdb_movies
+2013,Best Documentary Short Film,Inocente,True,film,title_found_outside_year_window
+2013,Best Documentary Short Film,Kings Point,False,film,short_film_not_in_imdb_movie_type
+2013,Best Documentary Short Film,Mondays at Racine,False,film,short_film_not_in_imdb_movie_type
+2013,Best Documentary Short Film,Open Heart,False,film,title_found_outside_year_window
+2013,Best Short Film (Live Action),Curfew,True,film,title_found_outside_year_window
+2013,Best Short Film (Live Action),Asad,False,film,title_found_outside_year_window
+2013,Best Short Film (Live Action),Buzkashi Boys,False,film,short_film_not_in_imdb_movie_type
+2013,Best Short Film (Live Action),Death of a Shadow (Dood Van Een Schaduw),False,film,short_film_not_in_imdb_movie_type
+2013,Best Short Film (Animated),Adam and Dog,False,film,short_film_not_in_imdb_movie_type
+2013,Best Short Film (Animated),Fresh Guacamole,False,film,short_film_not_in_imdb_movie_type
+2013,Best Short Film (Animated),"Maggie Simpson in ""The Longest Daycare""",False,film,short_film_not_in_imdb_movie_type
+2013,Best Music (Original Song),"""Skyfall"" from Skyfall",True,film,song_title_not_a_film_title
+2013,Best Music (Original Song),"""Before My Time"" from Chasing Ice",False,film,song_title_not_a_film_title
+2013,Best Music (Original Song),"""Everybody Needs a Best Friend"" from Ted",False,film,song_title_not_a_film_title
+2013,Best Music (Original Song),"""Pi's Lullaby"" from Life of Pi",False,film,song_title_not_a_film_title
+2013,Best Music (Original Song),"""Suddenly"" from Les Misérables",False,film,song_title_not_a_film_title
+2013,Best Visual Effects,Marvel's The Avengers,False,film,title_not_found_in_imdb_movies
+2014,Best Documentary Short Film,The Lady in Number 6: Music Saved My Life,True,film,short_film_not_in_imdb_movie_type
+2014,Best Documentary Short Film,CaveDigger,False,film,short_film_not_in_imdb_movie_type
+2014,Best Documentary Short Film,Facing Fear,False,film,title_found_outside_year_window
+2014,Best Documentary Short Film,Karama Has No Walls,False,film,short_film_not_in_imdb_movie_type
+2014,Best Documentary Short Film,Prison Terminal: The Last Days of Private Jack Hall,False,film,short_film_not_in_imdb_movie_type
+2014,Best Short Film (Live Action),That Wasn't Me,False,film,short_film_not_in_imdb_movie_type
+2014,Best Short Film (Live Action),Just Before Losing Everything,False,film,short_film_not_in_imdb_movie_type
+2014,Best Short Film (Live Action),Do I Have to Take Care of Everything?,False,film,short_film_not_in_imdb_movie_type
+2014,Best Short Film (Live Action),The Voorman Problem,False,film,short_film_not_in_imdb_movie_type
+2014,Best Short Film (Animated),Mr Hublot,True,film,short_film_not_in_imdb_movie_type
+2014,Best Short Film (Animated),Feral,False,film,title_found_outside_year_window
+2014,Best Short Film (Animated),Get a Horse!,False,film,short_film_not_in_imdb_movie_type
+2014,Best Short Film (Animated),Room on the Broom,False,film,short_film_not_in_imdb_movie_type
+2014,Best Music (Original Song),"""Let It Go"" from Frozen",True,film,song_title_not_a_film_title
+2014,Best Music (Original Song),"""Happy"" from Despicable Me 2",False,film,song_title_not_a_film_title
+2014,Best Music (Original Song),"""The Moon Song"" from Her",False,film,song_title_not_a_film_title
+2014,Best Music (Original Song),"""Ordinary Love"" from Mandela: Long Walk to Freedom",False,film,song_title_not_a_film_title
+2014,Best Music (Original Song),"""Alone Yet Not Alone"" from Alone yet Not Alone",False,film,song_title_not_a_film_title
+2015,Best Documentary Short Film,Crisis Hotline: Veterans Press 1,True,film,short_film_not_in_imdb_movie_type
+2015,Best Documentary Short Film,Joanna,False,film,title_found_outside_year_window
+2015,Best Documentary Short Film,Our Curse,False,film,short_film_not_in_imdb_movie_type
+2015,Best Documentary Short Film,White Earth,False,film,short_film_not_in_imdb_movie_type
+2015,Best Short Film (Live Action),The Phone Call,True,film,short_film_not_in_imdb_movie_type
+2015,Best Short Film (Live Action),Boogaloo and Graham,False,film,short_film_not_in_imdb_movie_type
+2015,Best Short Film (Live Action),Butter Lamp,False,film,short_film_not_in_imdb_movie_type
+2015,Best Short Film (Live Action),Parvaneh,False,film,title_found_outside_year_window
+2015,Best Short Film (Animated),The Dam Keeper,False,film,short_film_not_in_imdb_movie_type
+2015,Best Short Film (Animated),Me and My Moulton,False,film,short_film_not_in_imdb_movie_type
+2015,Best Short Film (Animated),A Single Life,False,film,short_film_not_in_imdb_movie_type
+2015,Best Music (Original Song),"""Glory"" from Selma",True,film,song_title_not_a_film_title
+2015,Best Music (Original Song),"""Everything Is Awesome"" from The Lego Movie",False,film,song_title_not_a_film_title
+2015,Best Music (Original Song),"""Grateful"" from Beyond the Lights",False,film,song_title_not_a_film_title
+2015,Best Music (Original Song),"""I'm Not Gonna Miss You"" from Glen Campbell: I'll Be Me",False,film,song_title_not_a_film_title
+2015,Best Music (Original Song),"""Lost Stars"" from Begin Again",False,film,song_title_not_a_film_title
+2016,Best Animated Feature Film,Boy and the World,False,film,title_not_found_in_imdb_movies
+2016,Best Documentary Short Film,A Girl in the River: The Price of Forgiveness,True,film,short_film_not_in_imdb_movie_type
+2016,Best Documentary Short Film,Body Team 12,False,film,short_film_not_in_imdb_movie_type
+2016,Best Documentary Short Film,"Chau, Beyond the Lines",False,film,short_film_not_in_imdb_movie_type
+2016,Best Documentary Short Film,Claude Lanzmann: Spectres of the Shoah,False,film,short_film_not_in_imdb_movie_type
+2016,Best Documentary Short Film,Last Day of Freedom,False,film,short_film_not_in_imdb_movie_type
+2016,Best Short Film (Live Action),Stutterer,True,film,short_film_not_in_imdb_movie_type
+2016,Best Short Film (Live Action),Ave Maria,False,film,title_found_outside_year_window
+2016,Best Short Film (Live Action),Day One,False,film,title_found_outside_year_window
+2016,Best Short Film (Live Action),Everything Will Be Okay,False,film,title_found_outside_year_window
+2016,Best Short Film (Live Action),Shok,False,film,short_film_not_in_imdb_movie_type
+2016,Best Short Film (Animated),Bear Story,True,film,short_film_not_in_imdb_movie_type
+2016,Best Short Film (Animated),Prologue,False,film,title_found_outside_year_window
+2016,Best Short Film (Animated),Sanjay's Super Team,False,film,short_film_not_in_imdb_movie_type
+2016,Best Short Film (Animated),We Can't Live Without Cosmos,False,film,short_film_not_in_imdb_movie_type
+2016,Best Short Film (Animated),World of Tomorrow,False,film,short_film_not_in_imdb_movie_type
+2016,Best Music (Original Score),Star Wars: The Force Awakens,False,film,title_not_found_in_imdb_movies
+2016,Best Music (Original Song),"""Writing's on the Wall"" from Spectre",True,film,song_title_not_a_film_title
+2016,Best Music (Original Song),"""Earned It"" from Fifty Shades of Grey",False,film,song_title_not_a_film_title
+2016,Best Music (Original Song),"""Manta Ray"" from Racing Extinction",False,film,song_title_not_a_film_title
+2016,Best Music (Original Song),"""Simple Song #3"" from Youth",False,film,song_title_not_a_film_title
+2016,Best Music (Original Song),"""Til It Happens to You"" from The Hunting Ground",False,film,song_title_not_a_film_title
+2016,Best Sound Editing,Star Wars: The Force Awakens,False,film,title_not_found_in_imdb_movies
+2016,Best Sound,Star Wars: The Force Awakens,False,film,title_not_found_in_imdb_movies
+2016,Best Film Editing,Star Wars: The Force Awakens,False,film,title_not_found_in_imdb_movies
+2016,Best Visual Effects,Star Wars: The Force Awakens,False,film,title_not_found_in_imdb_movies
+2017,Best Documentary Short Film,The White Helmets,True,film,short_film_not_in_imdb_movie_type
+2017,Best Documentary Short Film,4.1 Miles,False,film,short_film_not_in_imdb_movie_type
+2017,Best Documentary Short Film,Extremis,False,film,short_film_not_in_imdb_movie_type
+2017,Best Documentary Short Film,Joe's Violin,False,film,short_film_not_in_imdb_movie_type
+2017,Best Short Film (Live Action),Ennemis intérieurs,False,film,short_film_not_in_imdb_movie_type
+2017,Best Short Film (Live Action),La femme et le TGV,False,film,short_film_not_in_imdb_movie_type
+2017,Best Short Film (Live Action),Silent Nights,False,film,title_found_outside_year_window
+2017,Best Short Film (Live Action),Timecode,False,film,title_found_outside_year_window
+2017,Best Short Film (Animated),Piper,True,film,title_found_outside_year_window
+2017,Best Short Film (Animated),Blind Vaysha,False,film,short_film_not_in_imdb_movie_type
+2017,Best Short Film (Animated),Borrowed Time,False,film,title_found_outside_year_window
+2017,Best Short Film (Animated),Pear Cider and Cigarettes,False,film,short_film_not_in_imdb_movie_type
+2017,Best Music (Original Song),"""City of Stars"" from La La Land",True,film,song_title_not_a_film_title
+2017,Best Music (Original Song),"""Audition (The Fools Who Dream)"" from La La Land",False,film,song_title_not_a_film_title
+2017,Best Music (Original Song),"""Can't Stop the Feeling!"" from Trolls",False,film,song_title_not_a_film_title
+2017,Best Music (Original Song),"""The Empty Chair"" from Jim: The James Foley Story",False,film,song_title_not_a_film_title
+2017,Best Music (Original Song),"""How Far I'll Go"" from Moana",False,film,song_title_not_a_film_title
+2018,Best Documentary Short Film,Heaven Is a Traffic Jam on the 405,True,film,short_film_not_in_imdb_movie_type
+2018,Best Documentary Short Film,Edith+Eddie,False,film,short_film_not_in_imdb_movie_type
+2018,Best Documentary Short Film,Knife Skills,False,film,short_film_not_in_imdb_movie_type
+2018,Best Documentary Short Film,Traffic Stop,False,film,short_film_not_in_imdb_movie_type
+2018,Best Short Film (Live Action),The Silent Child,True,film,title_found_outside_year_window
+2018,Best Short Film (Live Action),DeKalb Elementary,False,film,short_film_not_in_imdb_movie_type
+2018,Best Short Film (Live Action),The Eleven O'Clock,False,film,short_film_not_in_imdb_movie_type
+2018,Best Short Film (Live Action),My Nephew Emmett,False,film,short_film_not_in_imdb_movie_type
+2018,Best Short Film (Live Action),Watu Wote/All of Us,False,film,short_film_not_in_imdb_movie_type
+2018,Best Short Film (Animated),Dear Basketball,True,film,short_film_not_in_imdb_movie_type
+2018,Best Short Film (Animated),Garden Party,False,film,title_found_outside_year_window
+2018,Best Short Film (Animated),Lou,False,film,title_found_outside_year_window
+2018,Best Short Film (Animated),Negative Space,False,film,title_found_outside_year_window
+2018,Best Short Film (Animated),Revolting Rhymes,False,film,title_found_outside_year_window
+2018,Best Music (Original Score),Star Wars: The Last Jedi,False,film,title_not_found_in_imdb_movies
+2018,Best Music (Original Song),"""Remember Me"" from Coco",True,film,song_title_not_a_film_title
+2018,Best Music (Original Song),"""Mighty River"" from Mudbound",False,film,song_title_not_a_film_title
+2018,Best Music (Original Song),"""Mystery of Love"" from Call Me by Your Name",False,film,song_title_not_a_film_title
+2018,Best Music (Original Song),"""Stand Up for Something"" from Marshall",False,film,song_title_not_a_film_title
+2018,Best Music (Original Song),"""This Is Me"" from The Greatest Showman",False,film,song_title_not_a_film_title
+2018,Best Sound Editing,Star Wars: The Last Jedi,False,film,title_not_found_in_imdb_movies
+2018,Best Sound,Star Wars: The Last Jedi,False,film,title_not_found_in_imdb_movies
+2018,Best Visual Effects,Star Wars: The Last Jedi,False,film,title_not_found_in_imdb_movies
+2019,Best Documentary Short Film,Period. End of Sentence.,True,film,short_film_not_in_imdb_movie_type
+2019,Best Documentary Short Film,End Game,False,film,title_found_outside_year_window
+2019,Best Documentary Short Film,A Night at the Garden,False,film,short_film_not_in_imdb_movie_type
+2019,Best Short Film (Live Action),Detainment,False,film,title_found_outside_year_window
+2019,Best Short Film (Live Action),Fauve,False,film,short_film_not_in_imdb_movie_type
+2019,Best Short Film (Animated),Bao,True,film,title_found_outside_year_window
+2019,Best Short Film (Animated),Animal Behaviour,False,film,short_film_not_in_imdb_movie_type
+2019,Best Short Film (Animated),Late Afternoon,False,film,short_film_not_in_imdb_movie_type
+2019,Best Short Film (Animated),One Small Step,False,film,title_found_outside_year_window
+2019,Best Music (Original Song),"""Shallow"" from A Star Is Born",True,film,song_title_not_a_film_title
+2019,Best Music (Original Song),"""All the Stars"" from Black Panther",False,film,song_title_not_a_film_title
+2019,Best Music (Original Song),"""I'll Fight"" from RBG",False,film,song_title_not_a_film_title
+2019,Best Music (Original Song),"""The Place Where Lost Things Go"" from Mary Poppins Returns",False,film,song_title_not_a_film_title
+2019,Best Music (Original Song),"""When a Cowboy Trades His Spurs for Wings"" from The Ballad of Buster Scruggs",False,film,song_title_not_a_film_title
+2020,Best International Feature Film,Honeyland (North Macedonia) in Turkish and Macedonian [ 27 ],False,film,title_not_found_in_imdb_movies
+2020,Best Documentary Short Film,Learning to Skateboard in a Warzone (If You're a Girl),True,film,short_film_not_in_imdb_movie_type
+2020,Best Documentary Short Film,In the Absence,False,film,short_film_not_in_imdb_movie_type
+2020,Best Documentary Short Film,Life Overtakes Me,False,film,short_film_not_in_imdb_movie_type
+2020,Best Documentary Short Film,St. Louis Superman,False,film,short_film_not_in_imdb_movie_type
+2020,Best Documentary Short Film,Walk Run Cha-Cha,False,film,short_film_not_in_imdb_movie_type
+2020,Best Short Film (Live Action),The Neighbors' Window,True,film,short_film_not_in_imdb_movie_type
+2020,Best Short Film (Live Action),Nefta Football Club,False,film,short_film_not_in_imdb_movie_type
+2020,Best Short Film (Live Action),Saria,False,film,short_film_not_in_imdb_movie_type
+2020,Best Short Film (Live Action),A Sister,False,film,short_film_not_in_imdb_movie_type
+2020,Best Short Film (Animated),Hair Love,True,film,short_film_not_in_imdb_movie_type
+2020,Best Short Film (Animated),Dcera (Daughter),False,film,short_film_not_in_imdb_movie_type
+2020,Best Short Film (Animated),Kitbull,False,film,short_film_not_in_imdb_movie_type
+2020,Best Short Film (Animated),Mémorable,False,film,short_film_not_in_imdb_movie_type
+2020,Best Music (Original Score),Star Wars: The Rise of Skywalker,False,film,title_not_found_in_imdb_movies
+2020,Best Music (Original Song),"""(I'm Gonna) Love Me Again"" from Rocketman",True,film,song_title_not_a_film_title
+2020,Best Music (Original Song),"""I Can't Let You Throw Yourself Away"" from Toy Story 4",False,film,song_title_not_a_film_title
+2020,Best Music (Original Song),"""I'm Standing with You"" from Breakthrough",False,film,song_title_not_a_film_title
+2020,Best Music (Original Song),"""Into the Unknown"" from Frozen 2",False,film,song_title_not_a_film_title
+2020,Best Music (Original Song),"""Stand Up"" from Harriet",False,film,song_title_not_a_film_title
+2020,Best Sound Editing,Star Wars: The Rise of Skywalker,False,film,title_not_found_in_imdb_movies
+2020,Best Visual Effects,Star Wars: The Rise of Skywalker,False,film,title_not_found_in_imdb_movies
+2021,Best Documentary Short Film,A Concerto Is a Conversation,False,film,short_film_not_in_imdb_movie_type
+2021,Best Documentary Short Film,Do Not Split,False,film,short_film_not_in_imdb_movie_type
+2021,Best Documentary Short Film,Hunger Ward,False,film,short_film_not_in_imdb_movie_type
+2021,Best Documentary Short Film,A Love Song for Latasha,False,film,short_film_not_in_imdb_movie_type
+2021,Best Short Film (Live Action),Two Distant Strangers,True,film,short_film_not_in_imdb_movie_type
+2021,Best Short Film (Live Action),Feeling Through,False,film,short_film_not_in_imdb_movie_type
+2021,Best Short Film (Live Action),The Letter Room,False,film,short_film_not_in_imdb_movie_type
+2021,Best Short Film (Live Action),The Present,False,film,title_found_outside_year_window
+2021,Best Short Film (Live Action),White Eye,False,film,short_film_not_in_imdb_movie_type
+2021,Best Short Film (Animated),If Anything Happens I Love You,True,film,short_film_not_in_imdb_movie_type
+2021,Best Short Film (Animated),Burrow,False,film,short_film_not_in_imdb_movie_type
+2021,Best Short Film (Animated),Genius Loci,False,film,title_found_outside_year_window
+2021,Best Short Film (Animated),Opera,False,film,title_found_outside_year_window
+2021,Best Short Film (Animated),Yes-People,False,film,short_film_not_in_imdb_movie_type
+2021,Best Music (Original Song),"""Fight for You"" from Judas and the Black Messiah",True,film,song_title_not_a_film_title
+2021,Best Music (Original Song),"""Hear My Voice"" from The Trial of the Chicago 7",False,film,song_title_not_a_film_title
+2021,Best Music (Original Song),"""Husavik"" from Eurovision Song Contest: The Story of Fire Saga",False,film,song_title_not_a_film_title
+2021,Best Music (Original Song),"""Io sì (Seen)"" from The Life Ahead",False,film,song_title_not_a_film_title
+2021,Best Music (Original Song),"""Speak Now"" from One Night in Miami...",False,film,song_title_not_a_film_title
+2022,Best Documentary Feature Film,"Summer of Soul (...Or, When the Revolution Could Not Be Televised)",True,film,title_not_found_in_imdb_movies
+2022,Best Documentary Short Film,The Queen of Basketball,True,film,short_film_not_in_imdb_movie_type
+2022,Best Documentary Short Film,Audible,False,film,short_film_not_in_imdb_movie_type
+2022,Best Documentary Short Film,Lead Me Home,False,film,short_film_not_in_imdb_movie_type
+2022,Best Documentary Short Film,Three Songs for Benazir,False,film,short_film_not_in_imdb_movie_type
+2022,Best Documentary Short Film,When We Were Bullies,False,film,short_film_not_in_imdb_movie_type
+2022,Best Short Film (Live Action),The Long Goodbye,True,film,title_found_outside_year_window
+2022,Best Short Film (Live Action),Ala Kachuu,False,film,short_film_not_in_imdb_movie_type
+2022,Best Short Film (Live Action),The Dress,False,film,title_found_outside_year_window
+2022,Best Short Film (Live Action),On My Mind,False,film,short_film_not_in_imdb_movie_type
+2022,Best Short Film (Live Action),Please Hold,False,film,short_film_not_in_imdb_movie_type
+2022,Best Short Film (Animated),The Windshield Wiper,True,film,short_film_not_in_imdb_movie_type
+2022,Best Short Film (Animated),Affairs of the Art,False,film,short_film_not_in_imdb_movie_type
+2022,Best Short Film (Animated),Bestia,False,film,title_found_outside_year_window
+2022,Best Short Film (Animated),Boxballet,False,film,short_film_not_in_imdb_movie_type
+2022,Best Short Film (Animated),Robin Robin,False,film,short_film_not_in_imdb_movie_type
+2022,Best Music (Original Song),"""No Time to Die"" from No Time to Die",True,film,song_title_not_a_film_title
+2022,Best Music (Original Song),"""Be Alive"" from King Richard",False,film,song_title_not_a_film_title
+2022,Best Music (Original Song),"""Dos Oruguitas"" from Encanto",False,film,song_title_not_a_film_title
+2022,Best Music (Original Song),"""Down to Joy"" from Belfast",False,film,song_title_not_a_film_title
+2022,Best Music (Original Song),"""Somehow You Do"" from Four Good Days",False,film,song_title_not_a_film_title
+2023,Best Documentary Short Film,The Elephant Whisperers,True,film,short_film_not_in_imdb_movie_type
+2023,Best Documentary Short Film,Haulout,False,film,short_film_not_in_imdb_movie_type
+2023,Best Documentary Short Film,How Do You Measure a Year?,False,film,short_film_not_in_imdb_movie_type
+2023,Best Documentary Short Film,The Martha Mitchell Effect,False,film,short_film_not_in_imdb_movie_type
+2023,Best Documentary Short Film,Stranger at the Gate,False,film,short_film_not_in_imdb_movie_type
+2023,Best Short Film (Live Action),An Irish Goodbye,True,film,short_film_not_in_imdb_movie_type
+2023,Best Short Film (Live Action),Ivalu,False,film,short_film_not_in_imdb_movie_type
+2023,Best Short Film (Live Action),Le pupille,False,film,short_film_not_in_imdb_movie_type
+2023,Best Short Film (Animated),"The Boy, the Mole, the Fox and the Horse",True,film,short_film_not_in_imdb_movie_type
+2023,Best Short Film (Animated),The Flying Sailor,False,film,short_film_not_in_imdb_movie_type
+2023,Best Short Film (Animated),Ice Merchants,False,film,short_film_not_in_imdb_movie_type
+2023,Best Short Film (Animated),My Year of Dicks,False,film,short_film_not_in_imdb_movie_type
+2023,Best Short Film (Animated),An Ostrich Told Me the World Is Fake and I Think I Believe It,False,film,short_film_not_in_imdb_movie_type
+2023,Best Music (Original Song),"""Naatu Naatu"" from RRR",True,film,song_title_not_a_film_title
+2023,Best Music (Original Song),"""Applause"" from Tell It Like a Woman",False,film,song_title_not_a_film_title
+2023,Best Music (Original Song),"""Hold My Hand"" from Top Gun: Maverick",False,film,song_title_not_a_film_title
+2023,Best Music (Original Song),"""Lift Me Up"" from Black Panther: Wakanda Forever",False,film,song_title_not_a_film_title
+2023,Best Music (Original Song),"""This Is a Life"" from Everything Everywhere All at Once",False,film,song_title_not_a_film_title
+2024,Best International Feature Film,"The Zone of Interest (United Kingdom) in German , Polish , and Yiddish",True,film,title_not_found_in_imdb_movies
+2024,Best International Feature Film,"The Teachers' Lounge (Germany) in German, Turkish , Polish, and English",False,film,title_not_found_in_imdb_movies
+2024,Best Documentary Short Film,The Last Repair Shop,True,film,short_film_not_in_imdb_movie_type
+2024,Best Documentary Short Film,The ABCs of Book Banning,False,film,short_film_not_in_imdb_movie_type
+2024,Best Documentary Short Film,The Barber of Little Rock,False,film,short_film_not_in_imdb_movie_type
+2024,Best Documentary Short Film,Island in Between,False,film,short_film_not_in_imdb_movie_type
+2024,Best Documentary Short Film,Nǎi Nai & Wài Pó,False,film,short_film_not_in_imdb_movie_type
+2024,Best Short Film (Live Action),The Wonderful Story of Henry Sugar,True,film,short_film_not_in_imdb_movie_type
+2024,Best Short Film (Live Action),The After,False,film,title_found_outside_year_window
+2024,Best Short Film (Live Action),Knight of Fortune,False,film,short_film_not_in_imdb_movie_type
+2024,Best Short Film (Live Action),"Red, White and Blue",False,film,short_film_not_in_imdb_movie_type
+2024,Best Short Film (Animated),War Is Over! Inspired by the Music of John and Yoko,True,film,short_film_not_in_imdb_movie_type
+2024,Best Short Film (Animated),Letter to a Pig,False,film,short_film_not_in_imdb_movie_type
+2024,Best Short Film (Animated),Ninety-Five Senses,False,film,short_film_not_in_imdb_movie_type
+2024,Best Short Film (Animated),Our Uniform,False,film,short_film_not_in_imdb_movie_type
+2024,Best Short Film (Animated),Pachyderme,False,film,short_film_not_in_imdb_movie_type
+2024,Best Music (Original Song),"""What Was I Made For?"" from Barbie",True,film,song_title_not_a_film_title
+2024,Best Music (Original Song),"""The Fire Inside"" from Flamin' Hot",False,film,song_title_not_a_film_title
+2024,Best Music (Original Song),"""I'm Just Ken"" from Barbie",False,film,song_title_not_a_film_title
+2024,Best Music (Original Song),"""It Never Went Away"" from American Symphony",False,film,song_title_not_a_film_title
+2024,Best Music (Original Song),"""Wahzhazhe (A Song for My People)"" from Killers of the Flower Moon",False,film,song_title_not_a_film_title
+2025,Best Documentary Short Film,The Only Girl in the Orchestra,True,film,short_film_not_in_imdb_movie_type
+2025,Best Documentary Short Film,Death by Numbers,False,film,short_film_not_in_imdb_movie_type
+2025,Best Documentary Short Film,"I Am Ready, Warden",False,film,short_film_not_in_imdb_movie_type
+2025,Best Documentary Short Film,Instruments of a Beating Heart,False,film,short_film_not_in_imdb_movie_type
+2025,Best Short Film (Live Action),I'm Not a Robot,True,film,short_film_not_in_imdb_movie_type
+2025,Best Short Film (Live Action),Anuja,False,film,short_film_not_in_imdb_movie_type
+2025,Best Short Film (Live Action),The Last Ranger,False,film,short_film_not_in_imdb_movie_type
+2025,Best Short Film (Live Action),The Man Who Could Not Remain Silent,False,film,short_film_not_in_imdb_movie_type
+2025,Best Short Film (Animated),In the Shadow of the Cypress,True,film,short_film_not_in_imdb_movie_type
+2025,Best Short Film (Animated),Beautiful Men,False,film,short_film_not_in_imdb_movie_type
+2025,Best Short Film (Animated),Magic Candies,False,film,short_film_not_in_imdb_movie_type
+2025,Best Short Film (Animated),Wander to Wonder,False,film,short_film_not_in_imdb_movie_type
+2025,Best Short Film (Animated),Yuck!,False,film,short_film_not_in_imdb_movie_type
+2025,Best Music (Original Song),"""El Mal"" from Emilia Pérez",True,film,song_title_not_a_film_title
+2025,Best Music (Original Song),"""The Journey"" from The Six Triple Eight",False,film,song_title_not_a_film_title
+2025,Best Music (Original Song),"""Like a Bird"" from Sing Sing",False,film,song_title_not_a_film_title
+2025,Best Music (Original Song),"""Mi camino"" from Emilia Pérez",False,film,song_title_not_a_film_title
+2025,Best Music (Original Song),"""Never Too Late"" from Elton John: Never Too Late",False,film,song_title_not_a_film_title
+2026,Best International Feature Film,"Sentimental Value (Norway) in Norwegian , Swedish , and English",True,film,title_not_found_in_imdb_movies
+2026,Best International Feature Film,"Sirāt (Spain) in Spanish , French , and Arabic",False,film,title_not_found_in_imdb_movies
+2026,Best Documentary Short Film,All the Empty Rooms,True,film,short_film_not_in_imdb_movie_type
+2026,Best Documentary Short Film,Armed Only with a Camera: The Life and Death of Brent Renaud,False,film,short_film_not_in_imdb_movie_type
+2026,Best Documentary Short Film,"Children No More: ""Were and Are Gone"" [ de ; es ]",False,film,short_film_not_in_imdb_movie_type
+2026,Best Documentary Short Film,The Devil Is Busy,False,film,short_film_not_in_imdb_movie_type
+2026,Best Documentary Short Film,Perfectly a Strangeness,False,film,short_film_not_in_imdb_movie_type
+2026,Best Short Film (Live Action),The Singers,True,film,short_film_not_in_imdb_movie_type
+2026,Best Short Film (Animated),The Girl Who Cried Pearls,True,film,short_film_not_in_imdb_movie_type
+2026,Best Short Film (Animated),Forevergreen,False,film,short_film_not_in_imdb_movie_type
+2026,Best Short Film (Animated),The Three Sisters,False,film,short_film_not_in_imdb_movie_type
+2026,Best Music (Original Song),"""Golden"" from KPop Demon Hunters",True,film,song_title_not_a_film_title
+2026,Best Music (Original Song),"""Dear Me"" from Diane Warren: Relentless",False,film,song_title_not_a_film_title
+2026,Best Music (Original Song),"""I Lied to You"" from Sinners",False,film,song_title_not_a_film_title
+2026,Best Music (Original Song),"""Sweet Dreams of Joy [ de ]"" from Viva Verdi!",False,film,song_title_not_a_film_title
+2026,Best Music (Original Song),"""Train Dreams"" from Train Dreams",False,film,song_title_not_a_film_title
+2026,Best Sound,F1,True,film,title_not_found_in_imdb_movies
+2026,Best Film Editing,F1,False,film,title_not_found_in_imdb_movies
+2026,Best Visual Effects,F1,False,film,title_not_found_in_imdb_movies
