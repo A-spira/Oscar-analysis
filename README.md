@@ -88,9 +88,6 @@ TODO
 
 ## Credits
 
-This repository builds on the 2025 academic project by Jonathan Bouniol, Anna Spira, Robin Levasseur
-and Keira Chang (Oscar nomination prediction from IMDb and TMDb data).
-
 This product uses the TMDb API but is not endorsed or certified by TMDb.
 Information courtesy of IMDb (https://www.imdb.com), used with permission under the non-commercial license.
 Oscar nominations data from Wikipedia, licensed under CC BY-SA 4.0.
