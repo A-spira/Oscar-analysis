@@ -32,7 +32,7 @@ Others: [`decision_log.md`](decision_log.md).
 - **Votes and ratings are post-hoc** (measured 2026-10-29). Median votes: 350,697 for Best Picture nominees vs
   35,848 for others; the votes threshold favours nominees.
 - **Budget is missing unevenly**: NA for 2.3 % of nominated film rows vs 32.0 % of others (talent 7.4 % vs
-  31.4 %): the budget result is not reliable.
+  31.4 %): the budget result is **not reliable**.
 - **TMDb `release_date` = first worldwide release** (festivals): of 269 nominated films, 26 are dated September,
   6 two or more years before their ceremony. Month and Q4 effects are approximate.
 - **IMDb has no lead/supporting split**: every actor is a candidate in both; only 47.4 % (actors) and 39.3 %
