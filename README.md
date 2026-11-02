@@ -47,6 +47,15 @@ uv run python -m oscars.collect.tmdb_api --universe         # eligible universe 
 
 Sources, extraction dates and reuse terms are documented in [`data/raw/MANIFEST.md`](data/raw/MANIFEST.md).
 
+```bash
+uv run python -m oscars.collect.verify_collection   # collection checks -> docs/collection_checks.md
+```
+
+It checks that we obtained the intended pages, files and entities: 98 ceremonies with no gap or duplicate and the
+Best Picture winner re-read live on 3 pages, IMDb files identical to the MANIFEST checksums and row counts, TMDb
+caches covering every eligible film, and pipeline figures cited in the docs equal to `integration_report.json`.
+Each check reports expected vs observed and PASS / FAIL / SKIPPED; nothing is corrected.
+
 ## Pipeline
 
 Raw data → analytical tables, no network access and no notebook logic:
