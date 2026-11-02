@@ -126,9 +126,11 @@ nominees / eligible rows. Source: `reports/eda/tables/` (ceremonies 2000–2026)
 
 **Bounded answer.** Among eligible films of the 2000–2026 ceremonies, a Q4 release (lift 1.9–2.4 across
 the three studio categories) and a biographical subject (lift about 3 for Picture and Director) are the
-clearest pre-nomination film characteristics associated with higher nomination rates; budget shows no
-consistent pattern across categories (100M+ lifts Best Picture to 2.40, while 5–20M leads in Original
-Screenplay), and non-English films have too few nominees to conclude. For talent, a record of two or more
+clearest pre-nomination film characteristics associated with higher nomination rates, though the two overlap
+(37.6 % of biopics vs 27.2 % of other films are Q4 releases). Budget is not a reliable result: about 31 % of
+budgets are missing and almost no film without a budget is nominated (3 of 2,512 for Best Picture), so
+against films with a known budget only, the Best Picture lift of the 100M+ bucket falls from 2.40 to 1.67
+(see `docs/quality_note.md`). Non-English films have too few nominees to conclude. For talent, a record of two or more
 earlier Oscar nominations is the strongest association (lift 5.3–12.7) and a Q4 release more than doubles
 the rate (lift 2.2–2.6), but these are descriptive associations on IMDb popularity measured after the
 fact, not causal effects.
