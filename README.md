@@ -77,6 +77,64 @@ Outputs in `data/output/`:
 Hand-checked match corrections live in `data/reference/match_overrides.csv`; every data-quality decision
 is logged in [`docs/decision_log.md`](docs/decision_log.md).
 
+## EDA
+
+```bash
+uv run python -m oscars.eda   # reads data/output/, writes reports/eda/ (needs the pipeline outputs)
+```
+
+| Output | Content |
+|---|---|
+| `reports/eda/tables/film_segments.csv`, `talent_segments.csv` | 1 row = category × variable × segment: `n`, `nominated`, `nomination_rate`, 95 % Wilson CI (`ci_low`, `ci_high`), `overall_rate`, `lift`, `low_n` (fewer than 30 nominees). Read by Tableau. |
+| `reports/eda/figures/*.png` | 7 figures drawn from those tables only (rate with CI, `n` per bar, category rate as a dotted line) |
+| `reports/eda/summary.md` | Top 5 reliable lifts per view and data quality of the analysed variables |
+
+Segment variables: release month and Q4 release, main genres, budget bucket, original language and
+English, prior Oscar record (0 / 1 / 2+ nominations in earlier ceremonies; director's record in the
+studio view). Missing values form an explicit `unknown` segment. These are associations, not causal effects.
+
+## Findings
+
+Nomination rate with 95 % Wilson CI, lift = segment rate / overall rate of the category, and the number of
+nominees / eligible rows. Source: `reports/eda/tables/` (ceremonies 2000–2026). Associations, not causal effects.
+
+1. **Studio view — Q4 release.** Films released October–December are nominated about 2 to 2.4 times more
+   often. Best Picture: **6.16 % [5.24–7.23], lift 2.39, 138 / 2,240**, against 1.17 % (67 / 5,745) for
+   January–September; lift 2.32 for Director and 1.90 for Original Screenplay. December alone reaches
+   8.87 % for Best Picture (lift 3.44, n = 688).
+   *Limit:* the month comes from the TMDb release date, often the first (festival or limited) release,
+   which is not necessarily the release that drives the campaign.
+2. **Studio view — biographical films.** Biopics are nominated about 3 times more often. Best Picture:
+   **8.23 % [6.35–10.61], lift 3.19, 53 / 644**; Director: 5.12 % [3.67–7.11], lift 3.03, 33 / 644.
+   *Limit:* IMDb genres overlap (most biopics are also dramas), so the genre's own effect cannot be
+   isolated; Original Screenplay has too few biopic nominees (21) to conclude.
+3. **Talent view — prior Oscar record.** Two or more earlier Oscar nominations is the strongest signal.
+   Best Actor: **3.33 % [2.54–4.35], lift 12.66, 51 / 1,531**, against 0.11 % with no earlier nomination;
+   lift 9.17 for Actress (55 / 1,242), 9.43 for Supporting Actor and 5.33 for Supporting Actress.
+   *Limit:* the history is matched by name (homonym risk not measured), and part of the effect reflects
+   that previously nominated actors are cast in prestige films; 55 of the 135 Best Actor nominees had no
+   earlier nomination.
+
+**Bounded answer.** Among eligible films of the 2000–2026 ceremonies, a Q4 release (lift 1.9–2.4 across
+the three studio categories) and a biographical subject (lift about 3 for Picture and Director) are the
+clearest pre-nomination film characteristics associated with higher nomination rates; budget shows no
+consistent pattern across categories (100M+ lifts Best Picture to 2.40, while 5–20M leads in Original
+Screenplay), and non-English films have too few nominees to conclude. For talent, a record of two or more
+earlier Oscar nominations is the strongest association (lift 5.3–12.7) and a Q4 release more than doubles
+the rate (lift 2.2–2.6), but these are descriptive associations on IMDb popularity measured after the
+fact, not causal effects.
+
+<details>
+<summary>Hypotheses for later (not tested)</summary>
+
+1. Is the Q4 effect weaker since streaming platforms grew (test by ceremony decade)?
+2. Do biopics released in Q4 combine both effects?
+3. Do "prestige" distributors (Searchlight, A24, ...) matter? Distributor is not collected yet.
+4. Festival or limited release vs wide release (TMDb release dates per country).
+5. Are actors in films whose director was previously nominated nominated more often?
+
+</details>
+
 ## Code quality
 
 ```bash

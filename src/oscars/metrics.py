@@ -2,6 +2,7 @@
 
 - nomination_rate = nominated / eligible
 - lift            = segment nomination rate / overall nomination rate of the category
+- Wilson 95 % confidence interval for each rate (well-behaved for small n and rates near 0)
 
 Undefined values (no eligible row, or a category with no nominee) are NaN, never a division by zero.
 """
@@ -25,8 +26,19 @@ def lift(segment_rate: float, overall_rate: float) -> float:
     return segment_rate / overall_rate
 
 
+def wilson_interval(nominated: int, eligible: int, z: float = 1.96) -> tuple[float, float]:
+    """Wilson score interval (95 % by default) for nominated / eligible; (NaN, NaN) when eligible is 0."""
+    if eligible <= 0:
+        return math.nan, math.nan
+    p = nominated / eligible
+    denom = 1 + z**2 / eligible
+    centre = (p + z**2 / (2 * eligible)) / denom
+    half = z * math.sqrt(p * (1 - p) / eligible + z**2 / (4 * eligible**2)) / denom
+    return max(0.0, centre - half), min(1.0, centre + half)
+
+
 def segment_kpis(df: pd.DataFrame, segment: str, category: str = "category", target: str = "nominated") -> pd.DataFrame:
-    """One row per (category, segment value): n, nominated, nomination_rate, overall_rate, lift.
+    """One row per (category, segment value): n, nominated, nomination_rate, ci_low, ci_high, overall_rate, lift.
 
     Unused levels of a categorical segment are kept with n = 0 (rate and lift NaN), so an empty
     segment is visible instead of silently disappearing. Missing segment values form their own group.
@@ -44,6 +56,7 @@ def segment_kpis(df: pd.DataFrame, segment: str, category: str = "category", tar
             n = int(in_seg.sum())
             k = int(g.loc[in_seg, target].sum())
             rate = nomination_rate(k, n)
+            ci_low, ci_high = wilson_interval(k, n)
             rows.append(
                 {
                     category: cat,
@@ -51,6 +64,8 @@ def segment_kpis(df: pd.DataFrame, segment: str, category: str = "category", tar
                     "n": n,
                     "nominated": k,
                     "nomination_rate": rate,
+                    "ci_low": ci_low,
+                    "ci_high": ci_high,
                     "overall_rate": overall,
                     "lift": lift(rate, overall),
                 }

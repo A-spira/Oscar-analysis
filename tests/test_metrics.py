@@ -5,7 +5,7 @@ import math
 import pandas as pd
 import pytest
 
-from oscars.metrics import lift, nomination_rate, segment_kpis
+from oscars.metrics import lift, nomination_rate, segment_kpis, wilson_interval
 
 
 def _toy() -> pd.DataFrame:
@@ -75,3 +75,20 @@ def test_missing_segment_values_form_their_own_group() -> None:
     na_rows = kpis[kpis["budget_bucket"].isna()]
     assert len(na_rows) == 1
     assert (int(na_rows["n"].iloc[0]), int(na_rows["nominated"].iloc[0])) == (2, 1)
+
+
+def test_wilson_interval_matches_reference_values_and_edge_cases() -> None:
+    """The 95 % Wilson interval matches textbook values, stays in [0, 1] and is undefined for n = 0."""
+    low, high = wilson_interval(2, 4)  # p = 0.5, n = 4: symmetric, known value 0.1500 - 0.8500
+    assert low == pytest.approx(0.1500, abs=1e-4)
+    assert high == pytest.approx(0.8500, abs=1e-4)
+
+    low, high = wilson_interval(0, 10)  # zero successes: lower bound exactly 0, upper bound 0.2775
+    assert low == 0.0
+    assert high == pytest.approx(0.2775, abs=1e-4)
+
+    low, high = wilson_interval(10, 10)  # all successes: upper bound exactly 1
+    assert high == 1.0
+    assert low == pytest.approx(0.7225, abs=1e-4)
+
+    assert all(math.isnan(x) for x in wilson_interval(0, 0))
