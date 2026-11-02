@@ -50,3 +50,7 @@ scratch/
 
 # Pipeline cache (rebuilt by `oscars.pipeline --from-raw`)
 data/interim/
+
+# Tableau lock and autosave files (only the packaged .twbx is versioned)
+*.twbr
+tableau/.~*
