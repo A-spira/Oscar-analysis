@@ -21,6 +21,7 @@ from collections import Counter
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from functools import cache
 from pathlib import Path
 from typing import Any, Literal
 
@@ -409,9 +410,21 @@ def _category_rows(report: list[dict[str, Any]], category: str) -> float:
     return float(next(c["rows"] for c in by_category if c["category"] == category))
 
 
+def billing_na_counts(talent: pd.DataFrame) -> tuple[float, float]:
+    """(rows with `billing_order` NA, those of them that are nominees): equal when every NA row is a nominee."""
+    na = talent["billing_order"].isna()
+    return float(na.sum()), float((na & talent["nominated"]).sum())
+
+
+@cache
+def _talent_billing() -> pd.DataFrame:
+    return pd.read_csv(OUTPUT_DIR / "talent_universe.csv", usecols=["nominated", "billing_order"])
+
+
 Observed = Callable[[list[dict[str, Any]]], list[float | tuple[float, ...]]]
 
-# (document, cited text, figures of integration_report.json in the order they appear in the cited text).
+# (document, cited text, figures in the order they appear in the cited text). Figures come from
+# integration_report.json, or from the data/output tables when the report does not hold them (billing_order NA).
 # A tuple means "every value must equal the cited figure" (e.g. one figure cited for 3 categories).
 CLAIMS: list[tuple[str, str, Observed]] = [
     (
@@ -541,9 +554,10 @@ CLAIMS: list[tuple[str, str, Observed]] = [
     ("docs/decision_log.md", "4 overrides left", lambda r: [_entry(r, "overrides")["applied"]]),
     (
         "docs/decision_log.md",
-        "23 rows; `billing_order` NA",
+        "23 re-injected rows, 22 with `billing_order` NA",
         lambda r: [
-            _entry(r, "universe", table="talent_universe")["reinjection_reasons"]["not_in_imdb_cast_list_or_role"]
+            _entry(r, "universe", table="talent_universe")["reinjection_reasons"]["not_in_imdb_cast_list_or_role"],
+            billing_na_counts(_talent_billing()),
         ],
     ),
 ]
@@ -594,7 +608,7 @@ def check_pipeline_claims() -> tuple[list[Check], list[dict[str, str]]]:
             Check(
                 "Pipeline",
                 f"Figures cited in {doc}",
-                "every cited figure = data/output/integration_report.json",
+                "every cited figure = integration_report.json (or the data/output tables)",
                 f"{len(doc_rows) - len(bad)} / {len(doc_rows)} cited texts match" + (" (see details)" if bad else ""),
                 _status(not bad),
             )
@@ -636,7 +650,8 @@ def write_markdown(checks: list[Check], claims: list[dict[str, str]], n_errors: 
         "## Pipeline figures cited in the docs",
         "",
         "Every figure of `README.md` and `docs/decision_log.md` that comes from "
-        "`data/output/integration_report.json`, compared at the precision written in the document.",
+        "`data/output/integration_report.json` (or, for `billing_order` NA, from `data/output/talent_universe.csv`), "
+        "compared at the precision written in the document.",
         "",
         "| Document | Cited text | Report value(s) | Differences (cited → report) | Status |",
         "|---|---|---|---|---|",
