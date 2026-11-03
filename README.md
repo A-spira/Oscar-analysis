@@ -168,7 +168,71 @@ grain (`test_joins.py`) and the no-leakage prior Oscar record (`test_history.py`
 
 ## Tableau
 
-TODO
+Workbook: [`tableau/oscar_dashboard.twbx`](tableau/oscar_dashboard.twbx), built with Tableau Desktop Public
+Edition 2026.2 and saved locally (never published to Tableau Public: the IMDb data cannot be redistributed).
+The packaged workbook embeds an extract of each data source, so it opens without the CSVs.
+
+**Dashboards**
+
+- **Dashboard 1 - Studios** helps movie studios decide which films to back with an FYC campaign: it shows how the nomination rate varies with the release period, the genre and the director's earlier nominations (one category at a time, chosen in the dropdown).
+- **Dashboard 2 - Luxury houses** gives a similar view for actors and actresses: the nomination rate is much higher for talents already nominated in earlier ceremonies and for films released in October–December. These are associations, not causal effects, and they describe nominations, not wins.
+
+
+**Data sources** (one Tableau data source per file, no joins; every indicator matches `oscars.metrics`)
+
+| Data source | File | Grain (1 row =) | Used by |
+|---|---|---|---|
+| Film universe | `data/output/film_universe.csv` | 1 eligible film × studio category × ceremony | Dashboard 1: KPIs, release month, budget, director record, language |
+| Film segments | `reports/eda/tables/film_segments.csv` | 1 category × variable × segment, rates and Wilson CI computed in Python | Dashboard 1: genre |
+| Talent universe | `data/output/talent_universe.csv` | 1 actor/actress × eligible film × talent category × ceremony | Dashboard 2: KPIs, prior record, release period |
+
+**Calculated fields** (same definition in Film universe and Talent universe unless stated)
+
+| Field | Formula | Purpose |
+|---|---|---|
+| `Nominee` | `IIF([Nominated], 1, 0)` | `nominated` is boolean; 1/0 so it can be summed |
+| `Eligible (n)` | `COUNT([Tconst])` | `n`, eligible rows in the segment |
+| `Nominees` | `SUM([Nominee])` | nominated rows in the segment |
+| `Nomination rate` | `SUM([Nominee]) / COUNT([Tconst])` | `nomination_rate = nominated / eligible` |
+| `Category base rate` | `{FIXED [Category] : SUM([Nominee]) / COUNT([Tconst])}` | rate of the whole category, independent of the chart's split; used as `MIN(...)` for the dotted reference line |
+| `Lift` (Talent universe) | `[Nomination rate] / MIN([Category base rate])` | `lift = segment rate / category rate` |
+| `Prior record` (Film universe) | `IF [Director N Prior Noms] = 0 THEN "0" ELSEIF [Director N Prior Noms] = 1 THEN "1" ELSE "2+" END` | same buckets as `oscars.eda.prior_bucket` |
+| `Prior record (talent)` (Talent universe) | `IF [N Prior Noms] = 0 THEN "0" ELSEIF [N Prior Noms] = 1 THEN "1" ELSE "2+" END` | same buckets, the person's prior acting nominations |
+| `In selected category` (Film universe and Film segments) | `[Category] = [Studio Category]` | keeps the category chosen in the `Studio Category` parameter (list: Best Picture, Best Directing, Best Writing (Original Screenplay); default Best Picture) |
+
+The genre view computes nothing in Tableau: it shows `nomination_rate`, `ci_low`, `ci_high`, `n`,
+`overall_rate` and `low_n` from `film_segments.csv` as `AVG` (one row per bar).
+
+**Filters that affect results**
+
+- One category at a time, never "All": each film appears once per studio category and each actor in both Lead
+  and Supporting, so categories are never aggregated. Sheet titles show the selected category.
+  - Dashboard 1: `Studio Category` parameter (dropdown) with the filter `In selected category` = True on every
+    Film universe sheet and on the genre sheet. A parameter rather than a shared filter because the dashboard
+    reads two data sources: a filter belongs to one source, the parameter is read by both.
+  - Dashboard 2: `Category` filter (single-value dropdown, default Best Actor in a Leading Role) applied to all
+    Talent universe sheets.
+- Studio – month: `Release Month` = Null excluded (1 Best Picture nominee has no TMDb release date). The base
+  rate still includes it (`FIXED` is computed before this filter), as in Python.
+- Studio – genre: `Variable` in the 10 genre flags (`is_drama` … `is_animation`) and `Segment` = `True`.
+- No data source filter and no extract filter.
+
+**Consistency checks** (Tableau must show the figures of `reports/eda/tables/`)
+
+| View | Expected |
+|---|---|
+| Best Picture base rate | 2.58 % (206 / 7,986) |
+| Best Picture, December release | 8.87 % (61 / 688) |
+| Best Picture, biopics | 8.23 % [6.35–10.61], n = 644 |
+| Best Actor, 2+ prior nominations | 3.33 %, lift 12.66 (51 / 1,531) |
+| Best Actor base rate | 0.26 % (135 / 51,303) |
+
+**Refresh or reconnect**
+
+1. Rebuild the outputs: `uv run python -m oscars.pipeline`, then `uv run python -m oscars.eda`.
+2. Open the workbook in Tableau Desktop or Tableau Public. For each data source: **Data → *source* → Edit Data
+   Source…** and point it to the CSV above if the path changed, then refresh it (**Data → *source* → Refresh**).
+3. Check the consistency table above, then **File → Save As… → Tableau Packaged Workbook (.twbx)**.
 
 ## Contributions
 
