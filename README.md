@@ -175,6 +175,7 @@ The packaged workbook embeds an extract of each data source, so it opens without
 **Dashboards**
 
 - **Dashboard 1 - Studios** helps movie studios decide which films to back with an FYC campaign: it shows how the nomination rate varies with the release period, the genre and the director's earlier nominations (one category at a time, chosen in the dropdown).
+- **Dashboard 1b - Studios caveats** shows the two variables we cannot draw a conclusion from: budget (missing mostly for non-nominated films, so a second line gives the base rate among films with a known budget) and language (too few non-English nominees). It follows the category chosen on Dashboard 1.
 - **Dashboard 2 - Luxury houses** gives a similar view for actors and actresses: the nomination rate is much higher for talents already nominated in earlier ceremonies and for films released in October–December. These are associations, not causal effects, and they describe nominations, not wins.
 
 
@@ -182,7 +183,7 @@ The packaged workbook embeds an extract of each data source, so it opens without
 
 | Data source | File | Grain (1 row =) | Used by |
 |---|---|---|---|
-| Film universe | `data/output/film_universe.csv` | 1 eligible film × studio category × ceremony | Dashboard 1: KPIs, release month, budget, director record, language |
+| Film universe | `data/output/film_universe.csv` | 1 eligible film × studio category × ceremony | Dashboard 1: KPIs, release month, director record; Dashboard 1b: budget, language |
 | Film segments | `reports/eda/tables/film_segments.csv` | 1 category × variable × segment, rates and Wilson CI computed in Python | Dashboard 1: genre |
 | Talent universe | `data/output/talent_universe.csv` | 1 actor/actress × eligible film × talent category × ceremony | Dashboard 2: KPIs, prior record, release period |
 
@@ -199,17 +200,21 @@ The packaged workbook embeds an extract of each data source, so it opens without
 | `Prior record` (Film universe) | `IF [Director N Prior Noms] = 0 THEN "0" ELSEIF [Director N Prior Noms] = 1 THEN "1" ELSE "2+" END` | same buckets as `oscars.eda.prior_bucket` |
 | `Prior record (talent)` (Talent universe) | `IF [N Prior Noms] = 0 THEN "0" ELSEIF [N Prior Noms] = 1 THEN "1" ELSE "2+" END` | same buckets, the person's prior acting nominations |
 | `In selected category` (Film universe and Film segments) | `[Category] = [Studio Category]` | keeps the category chosen in the `Studio Category` parameter (list: Best Picture, Best Directing, Best Writing (Original Screenplay); default Best Picture) |
+| `Reliability` | `IF [Nominees] < 30 THEN "< 30 nominees (unreliable)" ELSE "≥ 30 nominees" END` | bar colour, same rule as `low_n` in Python (lighter colour = fewer than 30 nominees) |
+| `Base rate (known budget)` (Film universe) | `{FIXED [Category] : SUM(IIF([Budget Bucket] <> "unknown", [Nominee], 0)) / SUM(IIF([Budget Bucket] <> "unknown", 1, 0))}` | second reference line on the budget view: budget is missing for 32.0 % of non-nominated films but 2.3 % of nominees, so the all-films base rate understates the comparison |
 
 The genre view computes nothing in Tableau: it shows `nomination_rate`, `ci_low`, `ci_high`, `n`,
-`overall_rate` and `low_n` from `film_segments.csv` as `AVG` (one row per bar).
+`overall_rate` and `low_n` from `film_segments.csv` as `AVG` (one row per bar); its colour uses `low_n`.
 
 **Filters that affect results**
 
 - One category at a time, never "All": each film appears once per studio category and each actor in both Lead
-  and Supporting, so categories are never aggregated. Sheet titles show the selected category.
-  - Dashboard 1: `Studio Category` parameter (dropdown) with the filter `In selected category` = True on every
-    Film universe sheet and on the genre sheet. A parameter rather than a shared filter because the dashboard
-    reads two data sources: a filter belongs to one source, the parameter is read by both.
+  and Supporting, so categories are never aggregated. The KPI titles and the Dashboard 1b chart titles show
+  the selected category.
+  - Dashboards 1 and 1b: `Studio Category` parameter (dropdown on Dashboard 1) with the filter
+    `In selected category` = True on every Film universe sheet and on the genre sheet. A parameter rather than a
+    shared filter because the dashboard reads two data sources: a filter belongs to one source, the parameter is
+    read by both. A parameter is global to the workbook, so Dashboard 1b follows the value chosen on Dashboard 1.
   - Dashboard 2: `Category` filter (single-value dropdown, default Best Actor in a Leading Role) applied to all
     Talent universe sheets.
 - Studio – month: `Release Month` = Null excluded (1 Best Picture nominee has no TMDb release date). The base
@@ -226,6 +231,7 @@ The genre view computes nothing in Tableau: it shows `nomination_rate`, `ci_low`
 | Best Picture, biopics | 8.23 % [6.35–10.61], n = 644 |
 | Best Actor, 2+ prior nominations | 3.33 %, lift 12.66 (51 / 1,531) |
 | Best Actor base rate | 0.26 % (135 / 51,303) |
+| Best Picture base rate, known budget only | 3.71 % (203 / 5,474); 100M+ lift 2.40 vs all films, 1.67 vs known budget |
 
 **Refresh or reconnect**
 
