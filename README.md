@@ -278,12 +278,16 @@ The genre view computes nothing in Tableau: it shows `nomination_rate`, `ci_low`
 
 ## Contributions
 
-- **Anna Spira** ([A-spira](https://github.com/A-spira)): TODO (Anna)
+- **Anna Spira** ([A-spira](https://github.com/A-spira)): Data collection (Wikipedia scraper, IMDb download and TMDb
+  API scripts, frozen IMDb snapshot with checksums and MANIFEST); the `oscars` pipeline (clean, integrate,
+  build_analytical) with its integration checks; the EDA (segment tables, confidence intervals, figures, findings)
+  (PRs #1, #3, #6, #8); review of the Tableau dashboards (#9, addressed in #10).
 - **Giovanni Piardi** ([gpiardi](https://github.com/gpiardi)): Tableau workbook (`tableau/oscar_dashboard.twbx`:
   three dashboards, calculated fields, `Studio Category` parameter, reliability colouring, known-budget base rate)
   and the README Tableau section (PRs #9, #10); review of the analysis PRs #6–#8, including recomputing 14
   figures of the quality note for #7.
-- **Both**: research question and decision makers, project pitch, oral presentation.
+- **Both**: research question and decision makers, project pitch, pytest tests and Ruff/mypy configuration, quality
+  note, decision log and collection checks (PRs #3, #5, #7), oral presentation.
 
 **Workflow.** One branch per task (`feature/uv-pipeline`, `feature/quality-tests`, `feature/eda`,
 `feature/quality-note`, `feature/tableau`, `fix/tableau-review`, …), merged into `main` through pull requests.
