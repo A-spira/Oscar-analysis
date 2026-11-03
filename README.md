@@ -1,6 +1,7 @@
 # Oscar Analysis
 
-Analysis of Academy Award nominations (1929–2026) built from Wikipedia, IMDb and TMDb data.
+Analysis of Academy Award nominations built from Wikipedia, IMDb and TMDb data. Nominations are collected for
+every ceremony (1929–2026); the analysis covers the 2000–2026 ceremonies.
 
 ## Question & scope
 
@@ -13,14 +14,55 @@ Analysis of Academy Award nominations (1929–2026) built from Wikipedia, IMDb a
 nominations (release month, genre, budget, original language, prior Oscar record) are associated with a
 higher nomination rate? Ceremonies 2000–2026, 7 categories:
 
-- **Studio view**: Best Picture, Best Director, Best Original Screenplay
+- **Studio view**: Best Picture, Best Director, Best Original Screenplay (`Best Picture`, `Best Directing`,
+  `Best Writing (Original Screenplay)` in the data and in Tableau)
 - **Talent view**: Best Actor, Best Actress, Best Supporting Actor, Best Supporting Actress
+  (`Best Actor in a Leading Role`, `Best Actress in a Leading Role`, `Best Actor in a Supporting Role`,
+  `Best Actress in a Supporting Role`)
 
 **KPIs**
 
 - `nomination_rate = nominated / eligible`
 - `lift = segment rate / overall rate of the category`
 - always report `n` (number of eligible rows in the segment)
+
+## Quick start
+
+Requires [uv](https://docs.astral.sh/uv/) and Python 3.12. The repository already contains the pipeline
+outputs (`data/output/`), the EDA reports (`reports/eda/`) and the TMDb caches (`data/raw/tmdb/`), so levels 1
+and 2 need no API key and level 1 needs no data download.
+
+1. **Check the code and the results (about 2 min)**
+
+   ```bash
+   uv sync
+   uv run pytest
+   uv run ruff check src tests
+   uv run mypy
+   uv run python -m oscars.eda   # rebuilds reports/eda/ from data/output/
+   ```
+
+   Then open `tableau/oscar_dashboard.twbx` in Tableau Desktop or Tableau Public: the data is embedded in the
+   workbook.
+
+2. **Rebuild the tables from the raw data (about 5 min)**: put the IMDb files in `data/raw/imdb/` (see
+   [IMDb frozen snapshot](#imdb-frozen-snapshot)), then
+
+   ```bash
+   uv run python -m oscars.pipeline --from-raw
+   ```
+
+3. **Collect everything again from the internet**: needs a TMDb API key, see [Data collection](#data-collection).
+
+## Documentation
+
+| File | Content |
+|---|---|
+| [`docs/quality_note.md`](docs/quality_note.md) | One-page quality note: scope, integration checks, key decisions and **what cannot be trusted** |
+| [`docs/decision_log.md`](docs/decision_log.md) | Every data-quality decision, with its reason |
+| [`docs/collection_checks.md`](docs/collection_checks.md) | Collection checks: expected vs observed, PASS / FAIL / SKIPPED |
+| [`data/raw/MANIFEST.md`](data/raw/MANIFEST.md) | Sources, extraction dates, reuse terms and checksums |
+| [`reports/eda/summary.md`](reports/eda/summary.md) | Top 5 reliable lifts per view and data quality of the analysed variables |
 
 ## Data collection
 
@@ -242,7 +284,22 @@ The genre view computes nothing in Tableau: it shows `nomination_rate`, `ci_low`
 
 ## Contributions
 
-TODO
+- **Anna Spira** ([A-spira](https://github.com/A-spira)): Data collection (Wikipedia scraper, IMDb download and TMDb
+  API scripts, frozen IMDb snapshot with checksums and MANIFEST); the `oscars` pipeline (clean, integrate,
+  build_analytical) with its integration checks; the EDA (segment tables, confidence intervals, figures, findings)
+  (PRs #1, #3, #6, #8); review of the Tableau dashboards (#9, addressed in #10).
+- **Giovanni Piardi** ([gpiardi](https://github.com/gpiardi)): Tableau workbook (`tableau/oscar_dashboard.twbx`:
+  three dashboards, calculated fields, `Studio Category` parameter, reliability colouring, known-budget base rate)
+  and the README Tableau section (PRs #9, #10); review of the analysis PRs #6–#8, including recomputing 14
+  figures of the quality note for #7.
+- **Both**: research question and decision makers, project pitch, pytest tests and Ruff/mypy configuration, quality
+  note, decision log and collection checks (PRs #3, #5, #7), oral presentation.
+
+**Workflow.** One branch per task (`feature/uv-pipeline`, `feature/quality-tests`, `feature/eda`,
+`feature/quality-note`, `feature/tableau`, `fix/tableau-review`, …), merged into `main` through pull requests.
+From the analysis phase on, each part was reviewed by the other partner: Giovanni reviewed and approved #6–#8
+on GitHub (for #7 he recomputed 14 figures of the quality note); Anna reviewed the Tableau dashboards after #9
+was merged, outside GitHub, and #10 addresses her review point by point (see its description).
 
 ## IMDb frozen snapshot
 
