@@ -316,7 +316,7 @@ These results are **associations, not causal effects**. The full list, with figu
    The data is already in `data/output/`.
 2. **Study winners among nominees**: the `won` column is already in both tables.
 3. **Add distributor and campaign data** (e.g. A24, Searchlight): a new source to collect.
-4. **Train a predictive model on this leakage-free dataset**, closing the loop with the original
+4. **Train a predictive model on this leakage-free dataset**
 
 ## Contributions
 

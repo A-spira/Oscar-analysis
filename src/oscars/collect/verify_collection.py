@@ -384,7 +384,11 @@ def check_tmdb() -> tuple[list[Check], pd.DataFrame]:
         checks.append(Check(src, name, expected, observed, _status(absent.empty)))
 
     errors = pd.concat([c[c["error"].notna()][["tconst", "error"]] for c in caches.values()])
-    titles = pd.read_parquet(INTERIM_DIR / "imdb_movies.parquet", columns=["tconst", "primaryTitle"])
+    movies_cache = INTERIM_DIR / "imdb_movies.parquet"
+    if movies_cache.exists():
+        titles = pd.read_parquet(movies_cache, columns=["tconst", "primaryTitle"])
+    else:  # fresh clone without the IMDb snapshot: keep the error list, titles unknown
+        titles = pd.DataFrame({"tconst": pd.Series(dtype="str"), "primaryTitle": pd.Series(dtype="str")})
     errors = errors.merge(titles, on="tconst", how="left", validate="one_to_one")
     errors = errors.rename(columns={"primaryTitle": "imdb_title", "error": "reason"})[
         ["tconst", "imdb_title", "reason"]
