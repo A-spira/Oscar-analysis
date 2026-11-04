@@ -211,8 +211,8 @@ grain (`test_joins.py`) and the no-leakage prior Oscar record (`test_history.py`
 ## Tableau
 
 Workbook: [`tableau/oscar_dashboard.twbx`](tableau/oscar_dashboard.twbx), built with Tableau Desktop Public
-Edition 2026.2 and saved to Tableau Public in private mode (not visible to others, because the IMDb data cannot be
-redistributed); the `.twbx` in this repository is the version to open. The packaged workbook embeds an extract of each data source, so it opens without the CSVs.
+Edition 2026.2. The `.twbx` in this repository is the version to open. The packaged
+workbook embeds an extract of each data source, so it opens without the CSVs.
 
 **Dashboards**
 
