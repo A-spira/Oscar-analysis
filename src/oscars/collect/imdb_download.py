@@ -40,7 +40,7 @@ def download(session: requests.Session, name: str) -> None:
     dest = IMDB_DIR / name
     expected = remote_size(session, name)
     if dest.exists() and dest.stat().st_size == expected:
-        print(f"{name}: deja present ({expected / 1e6:.1f} Mo), ignore")
+        print(f"{name}: already present ({expected / 1e6:.1f} MB), skipped")
         return
 
     # Write to a .part file then rename: no truncated file if interrupted
@@ -52,13 +52,13 @@ def download(session: requests.Session, name: str) -> None:
                 f.write(chunk)
                 bar.update(len(chunk))
     if tmp.stat().st_size != expected:
-        raise OSError(f"{name}: taille {tmp.stat().st_size} != {expected} attendue")
+        raise OSError(f"{name}: size {tmp.stat().st_size} != {expected} expected")
     tmp.replace(dest)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--list", action="store_true", help="affiche les fichiers et leur taille sans telecharger")
+    parser.add_argument("--list", action="store_true", help="show files and their size without downloading")
     args = parser.parse_args()
 
     with requests.Session() as session:
@@ -68,8 +68,8 @@ def main() -> None:
             for name in FILES:
                 size = remote_size(session, name)
                 total += size
-                print(f"{name:28s} {size / 1e6:9.1f} Mo")
-            print(f"{'TOTAL':28s} {total / 1e6:9.1f} Mo")
+                print(f"{name:28s} {size / 1e6:9.1f} MB")
+            print(f"{'TOTAL':28s} {total / 1e6:9.1f} MB")
             return
 
         IMDB_DIR.mkdir(parents=True, exist_ok=True)
@@ -77,7 +77,7 @@ def main() -> None:
             download(session, name)
 
     for name in FILES:
-        print(f"{name:28s} {(IMDB_DIR / name).stat().st_size / 1e6:9.1f} Mo")
+        print(f"{name:28s} {(IMDB_DIR / name).stat().st_size / 1e6:9.1f} MB")
 
 
 if __name__ == "__main__":

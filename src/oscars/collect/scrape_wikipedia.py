@@ -434,8 +434,8 @@ def main() -> None:
     df_all_data.to_csv(SCRAPING_DIR / "all_data_oscars.csv", index=False, encoding="utf-8")
     df_all_data.to_json(SCRAPING_DIR / "all_data_oscars.json", orient="records", force_ascii=False, indent=2)
 
-    print(f"Fichiers enregistres dans : {SCRAPING_DIR.relative_to(SCRAPING_DIR.parents[2])}")
-    print(f"Lignes: {len(df_all_data)}")
+    print(f"Files written to: {SCRAPING_DIR.relative_to(SCRAPING_DIR.parents[2])}")
+    print(f"Rows: {len(df_all_data)}")
 
 
 if __name__ == "__main__":

@@ -283,14 +283,14 @@ def _group_to_lists(df: pd.DataFrame, key: str, values: list) -> dict:
 def matched_tconsts() -> list:
     """Unique tconst of the Oscar nominations 2000+ matched to IMDb (order: films then persons)."""
     oscars = load_oscar_nominations()
-    print(f"Nominations Oscar 2000+ (film/personne) : {len(oscars)}")
+    print(f"Oscar nominations 2000+ (film/person)   : {len(oscars)}")
 
     movies = load_imdb_movies()
-    print(f"Films IMDb 1995+ hors adulte            : {len(movies):,}")
+    print(f"IMDb films 1995+, no adult titles       : {len(movies):,}")
     principals = load_imdb_principals(set(movies["tconst"]))
-    print(f"Principals pour ces films               : {len(principals):,}")
+    print(f"Principals for these films              : {len(principals):,}")
     names = load_imdb_names(set(principals["nconst"].dropna()))
-    print(f"Personnes chargees                      : {len(names):,}")
+    print(f"People loaded                           : {len(names):,}")
 
     title_lookup = _group_to_lists(movies.dropna(subset=["startYear"]), "primaryTitle", ["tconst", "startYear"])
     name_lookup = _group_to_lists(names, "primaryName", ["nconst"])
@@ -308,7 +308,7 @@ def matched_tconsts() -> list:
         for n, y, c in zip(oscar_persons["nominee"], oscar_persons["year"], oscar_persons["category"], strict=True)
     ]
 
-    for label, part in [("film", oscar_films), ("personne", oscar_persons)]:
+    for label, part in [("film", oscar_films), ("person", oscar_persons)]:
         n = part["tconst"].notna().sum()
         print(f"Matching categories {label:8s}          : {n}/{len(part)} ({n / len(part):.1%})")
 
@@ -325,7 +325,7 @@ def load_api_key() -> str:
     load_dotenv(ENV_FILE)
     key = os.getenv("TMDB_API_KEY")
     if not key:
-        raise SystemExit("TMDB_API_KEY introuvable dans .env")
+        raise SystemExit("TMDB_API_KEY not found in .env")
     return key
 
 
@@ -393,15 +393,15 @@ def test_call(api_key: str, tconst: str) -> None:
         status, find = _tmdb_get(session, api_key, f"/find/{tconst}", external_source="imdb_id")
         print(f"/find/{tconst}      -> HTTP {status}")
         if "_error" in find or not find.get("movie_results"):
-            print(f"Echec : {find.get('_error', 'not_found_on_tmdb')}")
+            print(f"Failed: {find.get('_error', 'not_found_on_tmdb')}")
             return
         tmdb_id = find["movie_results"][0]["id"]
         status, detail = _tmdb_get(session, api_key, f"/movie/{tmdb_id}", append_to_response="keywords")
         print(f"/movie/{tmdb_id}         -> HTTP {status}")
         if "_error" in detail:
-            print(f"Echec : {detail['_error']}")
+            print(f"Failed: {detail['_error']}")
             return
-        print(f"Titre    : {detail.get('title')} ({detail.get('original_title')})")
+        print(f"Title    : {detail.get('title')} ({detail.get('original_title')})")
         print(f"Budget   : {detail.get('budget')}")
         print(f"Keywords : {len(detail.get('keywords', {}).get('keywords', []))}")
 
@@ -410,20 +410,20 @@ def enrich(api_key: str) -> None:
     # Load the existing cache (resume after an interruption / instant reruns)
     if TMDB_CACHE_PATH.exists():
         cache_df = pd.read_parquet(TMDB_CACHE_PATH)
-        print(f"Cache existant trouve : {len(cache_df)} films deja recuperes")
+        print(f"Existing cache found: {len(cache_df)} films already fetched")
     else:
         cache_df = pd.DataFrame()
-        print("Pas de cache existant, demarrage a zero")
+        print("No existing cache, starting from scratch")
 
     # Unique tconst to fetch (not in the cache)
     all_tconsts = matched_tconsts()
     already_fetched = set(cache_df["tconst"]) if not cache_df.empty else set()
     to_fetch = [t for t in all_tconsts if t not in already_fetched]
 
-    print(f"Films uniques au total       : {len(all_tconsts)}")
-    print(f"Deja dans le cache           : {len(already_fetched)}")
-    print(f"A recuperer via TMDb         : {len(to_fetch)}")
-    print(f"Estimation temps (~20 req/s) : ~{len(to_fetch) * 2 * RATE_LIMIT_SLEEP:.0f}s")
+    print(f"Unique films in total        : {len(all_tconsts)}")
+    print(f"Already in the cache         : {len(already_fetched)}")
+    print(f"To fetch from TMDb           : {len(to_fetch)}")
+    print(f"Time estimate (~20 req/s)    : ~{len(to_fetch) * 2 * RATE_LIMIT_SLEEP:.0f}s")
 
     # Incremental fetch with periodic saves (resilient to interruptions)
     TMDB_DIR.mkdir(parents=True, exist_ok=True)
@@ -440,15 +440,15 @@ def enrich(api_key: str) -> None:
                     partial_df = pd.concat([cache_df, pd.DataFrame(new_records)], ignore_index=True)
                     partial_df.to_parquet(TMDB_CACHE_PATH, index=False)
                     err_count = pd.DataFrame(new_records)["error"].notna().sum()
-                    print(f"  [{i:4d}/{len(to_fetch)}] flush -> cache: {len(partial_df)} | erreurs: {err_count}")
+                    print(f"  [{i:4d}/{len(to_fetch)}] flush -> cache: {len(partial_df)} | errors: {err_count}")
 
     tmdb_df = pd.read_parquet(TMDB_CACHE_PATH)
     n_errors = tmdb_df["error"].notna().sum()
-    print(f"\nTotal films dans le cache TMDb : {len(tmdb_df)}")
-    print(f"Erreurs                        : {n_errors} ({100 * n_errors / len(tmdb_df):.1f}%)")
-    print(f"Succes                         : {100 * (1 - n_errors / len(tmdb_df)):.1f}%")
+    print(f"\nTotal films in the TMDb cache  : {len(tmdb_df)}")
+    print(f"Errors                         : {n_errors} ({100 * n_errors / len(tmdb_df):.1f}%)")
+    print(f"Success                        : {100 * (1 - n_errors / len(tmdb_df)):.1f}%")
     if n_errors > 0:
-        print("\nTypes d'erreur:")
+        print("\nError types:")
         print(tmdb_df[tmdb_df["error"].notna()]["error"].value_counts().to_string())
 
 
@@ -555,7 +555,7 @@ def enrich_universe(api_key: str, filters: UniverseFilters) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--test", metavar="TCONST", help="un seul appel test, sans ecrire le cache")
+    parser.add_argument("--test", metavar="TCONST", help="a single test call, does not write the cache")
     parser.add_argument("--universe", action="store_true", help="enrich the whole eligible universe (new cache)")
     parser.add_argument("--dry-run", action="store_true", help="with --universe: only count films, no API call")
     defaults = UniverseFilters()
