@@ -1,17 +1,17 @@
-"""Scraping des nominations Oscar depuis les pages Wikipedia "Nth Academy Awards".
+"""Scrape Oscar nominations from the "Nth Academy Awards" Wikipedia pages.
 
-Logique reprise de l'ancien notebook 00_Scraping.ipynb (projet 2025). Adaptations :
-chemins relatifs a la racine du projet, User-Agent identifiable, pause entre requetes,
-timeout HTTP.
+Logic taken from the old notebook 00_Scraping.ipynb (2025 project). Adaptations:
+paths relative to the project root, identifiable User-Agent, pause between requests,
+HTTP timeout.
 
-Sortie : data/raw/scraping/all_data_oscars.csv et .json
-(une ligne = une categorie x ceremonie, nommes separes par " | ").
+Output: data/raw/scraping/all_data_oscars.csv and .json
+(one row = one category x ceremony, nominees separated by " | ").
 
 Detailed mode (--detailed): writes data/raw/scraping/all_data_oscars_detailed.csv and .json
 instead, one row per nominee, keeping the secondary text after " – " (`details`) and, for
 person categories (acting, directing), the film title extracted from it (`film`).
 
-Usage : uv run python -m oscars.collect.scrape_wikipedia [--start 1929] [--end 2026] [--detailed]
+Usage: uv run python -m oscars.collect.scrape_wikipedia [--start 1929] [--end 2026] [--detailed]
 """
 
 import argparse
@@ -31,12 +31,12 @@ from oscars.paths import SCRAPING_DIR
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# User-Agent identifiable, conforme a la politique Wikimedia (pas de faux navigateur)
+# Identifiable User-Agent, compliant with the Wikimedia policy (no fake browser)
 USER_AGENT = (
     "OscarAnalysisBot/0.1 (academic project; https://github.com/A-spira/Oscar-analysis) "
     f"python-requests/{requests.__version__}"
 )
-REQUEST_PAUSE_S = 1.0  # pause polie entre deux pages
+REQUEST_PAUSE_S = 1.0  # polite pause between two pages
 REQUEST_TIMEOUT_S = 30
 
 # Categories whose primary is a person and whose secondary starts with the film title
@@ -364,7 +364,7 @@ def scrape_all_wiki(start_year: int = 1929, end_year: int = 2026, detailed: bool
 
 
 def to_dataframe(all_data: list[dict]) -> pd.DataFrame:
-    """Aplatit la structure imbriquee : une ligne = une categorie x ceremonie."""
+    """Flatten the nested structure: one row = one category x ceremony."""
     rows = []
     for ceremony in all_data:
         for award in ceremony.get("awards", []):
@@ -434,8 +434,8 @@ def main() -> None:
     df_all_data.to_csv(SCRAPING_DIR / "all_data_oscars.csv", index=False, encoding="utf-8")
     df_all_data.to_json(SCRAPING_DIR / "all_data_oscars.json", orient="records", force_ascii=False, indent=2)
 
-    print(f"Fichiers enregistres dans : {SCRAPING_DIR.relative_to(SCRAPING_DIR.parents[2])}")
-    print(f"Lignes: {len(df_all_data)}")
+    print(f"Files written to: {SCRAPING_DIR.relative_to(SCRAPING_DIR.parents[2])}")
+    print(f"Rows: {len(df_all_data)}")
 
 
 if __name__ == "__main__":

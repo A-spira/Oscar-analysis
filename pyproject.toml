@@ -1,9 +1,10 @@
 [project]
 name = "oscars"
 version = "0.1.0"
-description = "Oscar nominations analysis: data collection from Wikipedia, IMDb and TMDb"
+description = "Reproducible pipeline and EDA on Oscar nominations (Wikipedia, IMDb, TMDb)"
 authors = [
-    { name = "A-spira", email = "aspira@albertschool.com" }
+    { name = "A-spira", email = "aspira@albertschool.com" },
+    { name = "Giovanni Piardi", email = "giovipiardi@gmail.com" },
 ]
 requires-python = ">=3.12"
 dependencies = [

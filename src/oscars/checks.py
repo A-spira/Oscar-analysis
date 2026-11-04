@@ -121,7 +121,7 @@ def match_rate(report: Report, step: str, name: str, matched: pd.Series) -> dict
 def outliers(
     report: Report, step: str, name: str, s: pd.Series, low: float | None = None, high: float | None = None
 ) -> dict[str, Any]:
-    """Count values outside [low, high] and give the distribution (constat only, nothing is dropped)."""
+    """Count values outside [low, high] and give the distribution (report only, nothing is dropped)."""
     x = pd.to_numeric(s, errors="coerce")
     below = int((x < low).sum()) if low is not None else 0
     above = int((x > high).sum()) if high is not None else 0

@@ -211,8 +211,8 @@ grain (`test_joins.py`) and the no-leakage prior Oscar record (`test_history.py`
 ## Tableau
 
 Workbook: [`tableau/oscar_dashboard.twbx`](tableau/oscar_dashboard.twbx), built with Tableau Desktop Public
-Edition 2026.2 and saved locally (never published to Tableau Public: the IMDb data cannot be redistributed).
-The packaged workbook embeds an extract of each data source, so it opens without the CSVs.
+Edition 2026.2. The `.twbx` in this repository is the version to open. The packaged
+workbook embeds an extract of each data source, so it opens without the CSVs.
 
 **Dashboards**
 
@@ -276,6 +276,9 @@ The genre view computes nothing in Tableau: it shows `nomination_rate`, `ci_low`
 | Best Picture base rate, known budget only | 3.71 % (203 / 5,474); 100M+ lift 2.40 vs all films, 1.67 vs known budget |
 
 **Refresh or reconnect**
+
+The `.twb` keeps its author's local path (`/Users/...`). The embedded extracts let it open as is; to refresh it, go
+through **Edit Data Source…** and point it to `data/output/` and `reports/eda/tables/`.
 
 1. Rebuild the outputs: `uv run python -m oscars.pipeline`, then `uv run python -m oscars.eda`.
 2. Open the workbook in Tableau Desktop or Tableau Public. For each data source: **Data → *source* → Edit Data
