@@ -3,8 +3,7 @@
 - film_universe   : 1 row = 1 eligible film x studio category x ceremony
 - talent_universe : 1 row = 1 actor/actress x eligible film x talent category x ceremony
 
-Eligibility follows the 2025 "B+" strategy (notebook 05_Nomination_modeling.ipynb); thresholds are
-parameters so a sensitivity analysis can rerun the build. Every real nominee is re-injected even when
+Thresholds are parameters so a sensitivity analysis can rerun the build. Every real nominee is re-injected even when
 its film misses the thresholds. Prior Oscar record only counts strictly earlier ceremonies.
 """
 

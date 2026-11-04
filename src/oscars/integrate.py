@@ -1,6 +1,6 @@
 """Oscar <-> IMDb matching (films and persons) and TMDb merge, with integration checks.
 
-Matching rules are those of the 2025 notebook 01_Merge_datasets.ipynb:
+Matching rules :
 - film categories: exact title, then `norm_title`, release year in [Y-3, Y], closest to Y-1;
 - person categories: exact name -> nconst(s), then the person's film in [Y-3, Y] closest to Y-1,
   with a 0.5 bonus when the IMDb role matches the category (OSCAR_TO_IMDB_ROLE).

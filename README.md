@@ -285,6 +285,39 @@ through **Edit Data Source…** and point it to `data/output/` and `reports/eda/
    Source…** and point it to the CSV above if the path changed, then refresh it (**Data → *source* → Refresh**).
 3. Check the consistency table above, then **File → Save As… → Tableau Packaged Workbook (.twbx)**.
 
+## Limitations and next steps
+
+These results are **associations, not causal effects**. The full list, with figures, is in
+[`docs/quality_note.md`](docs/quality_note.md) (section "What cannot be trusted").
+
+**Limitations**
+
+1. **Votes and ratings are measured after the nominations** (IMDb snapshot of 2026-10-29): Best Picture
+   nominees have a median of 350,697 votes vs 35,848 for other films, so the eligibility threshold favours
+   nominees.
+2. **Budget is missing unevenly**: 2.3 % of nominated film rows vs 32.0 % of others, so the budget result
+   is not reliable.
+3. **Release date is the first worldwide release**, often a festival: 26 of 269 nominated films are dated
+   September, so month and Q4 effects are approximate.
+4. **Effects overlap**: 90.7 % of biopics are dramas, and 37.6 % of biopics vs 27.2 % of other films are
+   released in Q4, so the Biography and Q4 lifts are not independent.
+5. **Prior record is matched by name**: 83 nominee names have several IMDb ids; the homonym risk is not
+   measured.
+6. **IMDb has no lead/supporting split**: every actor competes in both categories; only 47.4 % / 39.3 % of
+   supporting actor / actress nominees are billed 1st–2nd.
+7. **Small segments**: 226 of 291 film segments have fewer than 30 nominees, including every non-English
+   segment, so they are inconclusive.
+8. **Best Picture field size changed**: 5 nominees a year in 2000–2009, then up to 10, so its base rate
+   mixes two regimes.
+
+**Next steps**
+
+1. **Test Q4 release and biographical subject together**, to separate the two effects (limitation 4).
+   The data is already in `data/output/`.
+2. **Study winners among nominees**: the `won` column is already in both tables.
+3. **Add distributor and campaign data** (e.g. A24, Searchlight): a new source to collect.
+4. **Train a predictive model on this leakage-free dataset**, closing the loop with the original
+
 ## Contributions
 
 - **Anna Spira** ([A-spira](https://github.com/A-spira)): Data collection (Wikipedia scraper, IMDb download and TMDb

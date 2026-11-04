@@ -4,7 +4,6 @@
 - IMDb: chunked reads of the raw .tsv.gz, early filtering, compact parquet cache in data/interim/.
 - TMDb: raw cache(s) -> 1 row per tconst, budget/revenue 0 treated as unknown.
 
-Normalisation logic is taken from the 2025 notebook 01_Merge_datasets.ipynb.
 """
 
 import re

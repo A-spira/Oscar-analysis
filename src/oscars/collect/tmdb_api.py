@@ -1,6 +1,6 @@
 """TMDb enrichment: raw cache data/raw/tmdb/tmdb_cache.parquet.
 
-Logic taken from the old notebook 01_Merge_datasets.ipynb (sections 1, 2, 4.1, 4.2 and 6):
+Logic :
   1. Oscar nominations 2000+ (Wikipedia scrape), normalised categories, long format;
   2. filtered IMDb loading (films 1995+, no adult titles);
   3. minimal Oscar <-> IMDb matching (film title / person name) to get the tconst;
