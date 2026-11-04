@@ -3,7 +3,6 @@
 Source: https://datasets.imdbws.com/ (terms: https://developer.imdb.com/non-commercial-datasets/,
 personal and non-commercial use only). The data/raw/imdb/ folder is gitignored.
 
-Only the files used by the old notebook 01_Merge_datasets.ipynb are downloaded.
 Files are kept compressed: pandas reads them directly (inferred compression).
 
 Usage:

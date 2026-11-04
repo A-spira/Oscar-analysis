@@ -1,6 +1,6 @@
 """Scrape Oscar nominations from the "Nth Academy Awards" Wikipedia pages.
 
-Logic taken from the old notebook 00_Scraping.ipynb (2025 project). Adaptations:
+Adaptations:
 paths relative to the project root, identifiable User-Agent, pause between requests,
 HTTP timeout.
 
