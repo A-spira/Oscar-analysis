@@ -1,1 +1,1 @@
-"""Scripts de collecte des donnees brutes (Wikipedia, IMDb, TMDb)."""
+"""Raw data collection scripts (Wikipedia, IMDb, TMDb)."""

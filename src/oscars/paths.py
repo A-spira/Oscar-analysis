@@ -1,8 +1,8 @@
-"""Chemins du projet, tous relatifs a la racine du repo (resolus a l'execution)."""
+"""Project paths, all relative to the repo root (resolved at runtime)."""
 
 from pathlib import Path
 
-# src/oscars/paths.py -> parents[2] = racine du projet
+# src/oscars/paths.py -> parents[2] = project root
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 DATA_DIR = PROJECT_ROOT / "data"

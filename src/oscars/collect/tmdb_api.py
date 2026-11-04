@@ -1,18 +1,18 @@
-"""Enrichissement TMDb : cache brut data/raw/tmdb/tmdb_cache.parquet.
+"""TMDb enrichment: raw cache data/raw/tmdb/tmdb_cache.parquet.
 
-Logique reprise de l'ancien notebook 01_Merge_datasets.ipynb (sections 1, 2, 4.1, 4.2 et 6) :
-  1. nominations Oscar 2000+ (scraping Wikipedia), categories normalisees, format long ;
-  2. chargement IMDb filtre (films 1995+, hors adulte) ;
-  3. matching minimal Oscar <-> IMDb (titre de film / nom de personne) pour obtenir les tconst ;
-  4. pour chaque tconst : /find/{tconst} puis /movie/{tmdb_id}?append_to_response=keywords,
-     avec cache parquet incremental (flush toutes les 50 iterations) et retry sur 429.
-Seul le cache TMDb brut est ecrit : pas de merge ni de nettoyage ici.
+Logic taken from the old notebook 01_Merge_datasets.ipynb (sections 1, 2, 4.1, 4.2 and 6):
+  1. Oscar nominations 2000+ (Wikipedia scrape), normalised categories, long format;
+  2. filtered IMDb loading (films 1995+, no adult titles);
+  3. minimal Oscar <-> IMDb matching (film title / person name) to get the tconst;
+  4. for each tconst: /find/{tconst} then /movie/{tmdb_id}?append_to_response=keywords,
+     with an incremental parquet cache (flush every 50 iterations) and retry on 429.
+Only the raw TMDb cache is written: no merge or cleaning here.
 
-La cle API est lue dans .env (TMDB_API_KEY) et masquee dans tout message d'erreur.
+The API key is read from .env (TMDB_API_KEY) and masked in every error message.
 
-Usage :
-  uv run python -m oscars.collect.tmdb_api --test tt0457430   # 1 appel test, rien n'est ecrit
-  uv run python -m oscars.collect.tmdb_api                    # enrichissement complet (incremental)
+Usage:
+  uv run python -m oscars.collect.tmdb_api --test tt0457430   # 1 test call, nothing is written
+  uv run python -m oscars.collect.tmdb_api                    # full enrichment (incremental)
   uv run python -m oscars.collect.tmdb_api --universe         # whole eligible universe -> tmdb_universe_cache.parquet
 """
 
@@ -30,50 +30,50 @@ from dotenv import load_dotenv
 from oscars.paths import ENV_FILE, IMDB_DIR, SCRAPING_DIR, TMDB_DIR
 
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
-RATE_LIMIT_SLEEP = 0.05  # 20 req/s, en dessous de la limite TMDb (~50 req/s)
+RATE_LIMIT_SLEEP = 0.05  # 20 req/s, below the TMDb limit (~50 req/s)
 TMDB_CACHE_PATH = TMDB_DIR / "tmdb_cache.parquet"
 TMDB_UNIVERSE_CACHE_PATH = TMDB_DIR / "tmdb_universe_cache.parquet"
 SAVE_EVERY = 50
 
 # ---------------------------------------------------------------------------
-# 1. Nominations Oscar (format long)
+# 1. Oscar nominations (long format)
 # ---------------------------------------------------------------------------
 
-# Normalisation des categories (regrouper les variantes historiques)
+# Category normalisation (groups the historical variants)
 CATEGORY_MAP = {
-    # Acteurs
+    # Acting
     "Best Actor": "Best Actor in a Leading Role",
     "Best Actress": "Best Actress in a Leading Role",
-    # Ecriture
+    # Writing
     "Best Writing (Screenplay Written Directly for the Screen)": "Best Writing (Original Screenplay)",
     "Best Writing (Screenplay Based on Material Previously Produced or Published)": "Best Writing (Adapted Screenplay)",
     "Best Writing (Adapted Screenplay)[22]": "Best Writing (Adapted Screenplay)",
     "Best Writing (Adapted Screenplay)[24]": "Best Writing (Adapted Screenplay)",
     "Best  Writing (Screenplay -- Original)": "Best Writing (Original Screenplay)",
-    # Film international
+    # International film
     "Best Foreign Language Film": "Best International Feature Film",
     "Best Foreign Language Film[14]": "Best International Feature Film",
     # Art Direction -> Production Design
     "Best Art Direction": "Best Production Design",
     "Best Art Direction (Black-and-White)": "Best Production Design",
     "Best Art Direction (Color)": "Best Production Design",
-    # Son
+    # Sound
     "Best Sound Recording": "Best Sound",
     "Best Sound Mixing": "Best Sound",
     "Best Sound Effects Editing": "Best Sound Editing",
-    # Maquillage
+    # Makeup
     "Best Makeup": "Best Makeup and Hairstyling",
-    # Documentaires
+    # Documentaries
     "Best Documentary (Feature)": "Best Documentary Feature Film",
     "Best Documentary (Short Subject)": "Best Documentary Short Film",
-    # Courts-metrages
+    # Shorts
     "Best Short Subject (Animated)": "Best Short Film (Animated)",
     "Best Short Subject (Cartoon)": "Best Short Film (Animated)",
     "Best Animated Short Film": "Best Short Film (Animated)",
     "Best Live Action Short Film": "Best Short Film (Live Action)",
 }
 
-# Categories dont le nominee est un film (le nominee = titre du film)
+# Categories whose nominee is a film (nominee = film title)
 FILM_CATEGORIES = {
     "Best Picture",
     "Best Animated Feature Film",
@@ -83,7 +83,7 @@ FILM_CATEGORIES = {
     "Best Short Film (Animated)",
     "Best Short Film (Live Action)",
     "Best Motion Picture",
-    # Categories techniques ou le nominee est generalement un film
+    # Technical categories whose nominee is usually a film
     "Best Cinematography",
     "Best Costume Design",
     "Best Film Editing",
@@ -98,7 +98,7 @@ FILM_CATEGORIES = {
     "Best Writing (Adapted Screenplay)",
 }
 
-# Categories dont le nominee est une personne
+# Categories whose nominee is a person
 PERSON_CATEGORIES = {
     "Best Actor in a Leading Role",
     "Best Actress in a Leading Role",
@@ -108,7 +108,7 @@ PERSON_CATEGORIES = {
     "Best Director",
 }
 
-# Mapping entre categorie Oscar et role IMDb dans principals
+# Mapping between Oscar category and IMDb role in title.principals
 OSCAR_TO_IMDB_ROLE = {
     "Best Actor in a Leading Role": {"actor"},
     "Best Actress in a Leading Role": {"actress"},
@@ -120,7 +120,7 @@ OSCAR_TO_IMDB_ROLE = {
 
 
 def explode_oscar_nominations(df: pd.DataFrame) -> pd.DataFrame:
-    """Transforme le dataset Oscar en format long : une ligne par nomine."""
+    """Turn the Oscar dataset into long format: one row per nominee."""
     rows = []
     for _, row in df.iterrows():
         base = {
@@ -128,9 +128,9 @@ def explode_oscar_nominations(df: pd.DataFrame) -> pd.DataFrame:
             "year": row["year"],
             "category": row["category_clean"],
         }
-        # Le gagnant
+        # The winner
         rows.append({**base, "nominee": row["winner"].strip(), "winner": True})
-        # Les autres nominees
+        # The other nominees
         if pd.notna(row["nominees"]):
             for nominee in row["nominees"].split("|"):
                 nominee = nominee.strip()
@@ -140,7 +140,7 @@ def explode_oscar_nominations(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def load_oscar_nominations() -> pd.DataFrame:
-    """Nominations 2000+, categories normalisees, format long, categories film/personne seulement."""
+    """Nominations 2000+, normalised categories, long format, film/person categories only."""
     oscars_raw = pd.read_csv(SCRAPING_DIR / "all_data_oscars.csv")
     oscars = oscars_raw[oscars_raw["year"] >= 2000].copy()
     oscars["category_clean"] = oscars["category"].replace(CATEGORY_MAP)
@@ -153,7 +153,7 @@ def load_oscar_nominations() -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
-# 2. Chargement IMDb (filtre tot, lecture par chunks)
+# 2. IMDb loading (early filtering, chunked reads)
 # ---------------------------------------------------------------------------
 
 
@@ -162,8 +162,8 @@ def _read_tsv_chunks(name: str, **kwargs: Any) -> "pd.io.parsers.TextFileReader"
 
 
 def load_imdb_movies() -> pd.DataFrame:
-    """title.basics : longs metrages (movie) 1995+, hors adulte."""
-    # Tout en str pour eviter les erreurs de parsing (certains titres contiennent des tabulations)
+    """title.basics: feature films (movie) 1995+, no adult titles."""
+    # Everything as str to avoid parsing errors (some titles contain tabs)
     chunks = _read_tsv_chunks("title.basics.tsv.gz", dtype=str, on_bad_lines="skip")
     movies = pd.concat([c[c["titleType"] == "movie"] for c in chunks], ignore_index=True)
 
@@ -175,7 +175,7 @@ def load_imdb_movies() -> pd.DataFrame:
 
 
 def load_imdb_principals(movie_ids: set) -> pd.DataFrame:
-    """title.principals filtre sur nos films (job/characters exclus pour la memoire)."""
+    """title.principals filtered on our films (job/characters excluded to save memory)."""
     chunks = _read_tsv_chunks(
         "title.principals.tsv.gz",
         usecols=["tconst", "ordering", "nconst", "category"],
@@ -185,33 +185,33 @@ def load_imdb_principals(movie_ids: set) -> pd.DataFrame:
 
 
 def load_imdb_names(person_ids: set) -> pd.DataFrame:
-    """name.basics filtre sur les personnes presentes dans principals."""
+    """name.basics filtered on the people present in principals."""
     chunks = _read_tsv_chunks("name.basics.tsv.gz", usecols=["nconst", "primaryName"])
     return pd.concat([c[c["nconst"].isin(person_ids)] for c in chunks], ignore_index=True)
 
 
 # ---------------------------------------------------------------------------
-# 3. Matching Oscar <-> IMDb (minimal : on ne garde que les tconst)
+# 3. Oscar <-> IMDb matching (minimal: only the tconst are kept)
 # ---------------------------------------------------------------------------
 
 
 def norm_title(s: str) -> str:
-    # Supprimer les notes de bas de page Wikipedia entre crochets
+    # Remove Wikipedia footnotes in square brackets
     s = re.sub(r"\[\d+\]", "", s)
-    # Supprimer les suffixes de pays/langue des categories internationales
+    # Remove the country/language suffixes of international categories
     s = re.sub(r"\s*\([^)]*\)\s+in\s+[A-Za-z\s]+$", "", s, flags=re.I)
-    # Supprimer les suffixes de producteur/realisateur apres tiret
+    # Remove the producer/director suffixes after a dash
     s = re.sub(r"\s+[-–—]\s+[A-Z][^-–—]*$", "", s)
-    # Optionnel: l'ancien nettoyage de parenthese si present a la fin
+    # Optional: the old cleanup of a trailing parenthesis, if present
     s = s.split(" (")[0].strip() if " (" in s and s.endswith(")") else s
     return s.strip()
 
 
 def match_film_to_imdb(title: str, oscar_year: int, lookup: dict[str, list[tuple[str, int]]]) -> str | None:
-    """Trouve le tconst IMDb le plus probable pour un titre de film nomine aux Oscars.
+    """Find the most likely IMDb tconst for the title of an Oscar-nominated film.
 
-    La ceremonie Oscar d'une annee N recompense des films sortis en N-1 (parfois N-2).
-    On cherche le film avec l'annee la plus proche dans la fenetre [N-3, N].
+    The Oscar ceremony of year N rewards films released in N-1 (sometimes N-2).
+    We look for the film with the closest year in the window [N-3, N].
     """
     clean_title = norm_title(title)
 
@@ -222,13 +222,13 @@ def match_film_to_imdb(title: str, oscar_year: int, lookup: dict[str, list[tuple
     if not candidates:
         return None
 
-    # Filtrer sur la fenetre temporelle et prendre le plus proche
+    # Filter on the time window and take the closest film
     scored = [(tc, yr, abs(yr - (oscar_year - 1))) for tc, yr in candidates if oscar_year - 3 <= yr <= oscar_year]
     if not scored:
         return None
 
     scored.sort(key=lambda x: x[2])
-    return scored[0][0]  # tconst du meilleur match
+    return scored[0][0]  # tconst of the best match
 
 
 def match_person_to_film(
@@ -238,10 +238,10 @@ def match_person_to_film(
     name_lookup: dict[str, list[str]],
     film_index: dict[str, list[tuple[str, int, str]]],
 ) -> tuple[str | None, str | None]:
-    """Trouve le tconst du film pour lequel une personne est nommee aux Oscars.
+    """Find the tconst of the film for which a person is nominated at the Oscars.
 
-    1. Trouve le nconst de la personne via son nom
-    2. Cherche dans ses films celui de l'annee correspondante avec le bon role
+    1. Find the person's nconst from their name
+    2. Among their films, look for the one of the matching year with the right role
     """
     nconst_list = name_lookup.get(person_name, [])
     if not nconst_list:
@@ -259,11 +259,11 @@ def match_person_to_film(
             if film_year is None:
                 continue
             year_diff = abs(film_year - (oscar_year - 1))
-            # Le film doit etre dans la bonne fenetre temporelle
+            # The film must be in the right time window
             if oscar_year - 3 <= film_year <= oscar_year:
-                # Bonus si le role correspond
+                # Bonus if the role matches
                 role_match = 1 if (not expected_roles or role in expected_roles) else 0
-                score = year_diff - role_match * 0.5  # Priorite au role correct
+                score = year_diff - role_match * 0.5  # Priority to the correct role
                 if score < best_score:
                     best_score = score
                     best_match = tconst
@@ -273,7 +273,7 @@ def match_person_to_film(
 
 
 def _group_to_lists(df: pd.DataFrame, key: str, values: list) -> dict:
-    """{key: [tuple(values), ...]} en conservant l'ordre des lignes (equivaut au groupby().apply du notebook)."""
+    """{key: [tuple(values), ...]} keeping row order (same as the notebook's groupby().apply)."""
     out: dict = {}
     for row in df[[key, *values]].itertuples(index=False, name=None):
         out.setdefault(row[0], []).append(row[1:] if len(values) > 1 else row[1])
@@ -281,7 +281,7 @@ def _group_to_lists(df: pd.DataFrame, key: str, values: list) -> dict:
 
 
 def matched_tconsts() -> list:
-    """tconst uniques des nominations Oscar 2000+ matchees avec IMDb (ordre : films puis personnes)."""
+    """Unique tconst of the Oscar nominations 2000+ matched to IMDb (order: films then persons)."""
     oscars = load_oscar_nominations()
     print(f"Nominations Oscar 2000+ (film/personne) : {len(oscars)}")
 
@@ -317,7 +317,7 @@ def matched_tconsts() -> list:
 
 
 # ---------------------------------------------------------------------------
-# 4. API TMDb
+# 4. TMDb API
 # ---------------------------------------------------------------------------
 
 
@@ -330,13 +330,13 @@ def load_api_key() -> str:
 
 
 def _mask(text: str, api_key: str) -> str:
-    """Retire la cle API de tout texte (les exceptions requests contiennent l'URL complete)."""
+    """Remove the API key from any text (requests exceptions contain the full URL)."""
     text = re.sub(r"(api_key=)[^&\s]+", r"\1***", text)
     return text.replace(api_key, "***")
 
 
 def _tmdb_get(session: requests.Session, api_key: str, path: str, **params: str) -> tuple[int | None, dict[str, Any]]:
-    """Appel GET TMDb avec retry simple sur 429 (rate limit). Renvoie (status_code, json)."""
+    """TMDb GET call with a simple retry on 429 (rate limit). Returns (status_code, json)."""
     params["api_key"] = api_key
     status = None
     try:
@@ -352,8 +352,8 @@ def _tmdb_get(session: requests.Session, api_key: str, path: str, **params: str)
 
 
 def fetch_tmdb(session: requests.Session, api_key: str, tconst: str) -> dict[str, Any]:
-    """Recupere overview, keywords, budget, etc. pour un tconst IMDb (2 calls TMDb)."""
-    # Etape 1 : resoudre tconst -> tmdb_id
+    """Fetch overview, keywords, budget, etc. for an IMDb tconst (2 TMDb calls)."""
+    # Step 1: resolve tconst -> tmdb_id
     _, find = _tmdb_get(session, api_key, f"/find/{tconst}", external_source="imdb_id")
     if "_error" in find:
         return {"tconst": tconst, "error": find["_error"]}
@@ -365,7 +365,7 @@ def fetch_tmdb(session: requests.Session, api_key: str, tconst: str) -> dict[str
     tmdb_id = movies[0]["id"]
     time.sleep(RATE_LIMIT_SLEEP)
 
-    # Etape 2 : details + keywords en 1 call (append_to_response)
+    # Step 2: details + keywords in 1 call (append_to_response)
     _, detail = _tmdb_get(session, api_key, f"/movie/{tmdb_id}", append_to_response="keywords")
     if "_error" in detail:
         return {"tconst": tconst, "tmdb_id": tmdb_id, "error": detail["_error"]}
@@ -388,7 +388,7 @@ def fetch_tmdb(session: requests.Session, api_key: str, tconst: str) -> dict[str
 
 
 def test_call(api_key: str, tconst: str) -> None:
-    """Appel test sur un seul film : codes HTTP, titre, budget, nb de keywords. N'ecrit rien."""
+    """Test call on a single film: HTTP codes, title, budget, number of keywords. Writes nothing."""
     with requests.Session() as session:
         status, find = _tmdb_get(session, api_key, f"/find/{tconst}", external_source="imdb_id")
         print(f"/find/{tconst}      -> HTTP {status}")
@@ -407,7 +407,7 @@ def test_call(api_key: str, tconst: str) -> None:
 
 
 def enrich(api_key: str) -> None:
-    # Charger le cache existant (reprise apres interruption / reruns instantanes)
+    # Load the existing cache (resume after an interruption / instant reruns)
     if TMDB_CACHE_PATH.exists():
         cache_df = pd.read_parquet(TMDB_CACHE_PATH)
         print(f"Cache existant trouve : {len(cache_df)} films deja recuperes")
@@ -415,7 +415,7 @@ def enrich(api_key: str) -> None:
         cache_df = pd.DataFrame()
         print("Pas de cache existant, demarrage a zero")
 
-    # Liste des tconst uniques a recuperer (hors cache)
+    # Unique tconst to fetch (not in the cache)
     all_tconsts = matched_tconsts()
     already_fetched = set(cache_df["tconst"]) if not cache_df.empty else set()
     to_fetch = [t for t in all_tconsts if t not in already_fetched]
@@ -425,7 +425,7 @@ def enrich(api_key: str) -> None:
     print(f"A recuperer via TMDb         : {len(to_fetch)}")
     print(f"Estimation temps (~20 req/s) : ~{len(to_fetch) * 2 * RATE_LIMIT_SLEEP:.0f}s")
 
-    # Fetch incremental avec sauvegarde periodique (resilience aux interruptions)
+    # Incremental fetch with periodic saves (resilient to interruptions)
     TMDB_DIR.mkdir(parents=True, exist_ok=True)
     new_records = []
     if to_fetch:
@@ -436,7 +436,7 @@ def enrich(api_key: str) -> None:
                 time.sleep(RATE_LIMIT_SLEEP)
 
                 if i % SAVE_EVERY == 0 or i == len(to_fetch):
-                    # Flush sur disque toutes les SAVE_EVERY iterations
+                    # Flush to disk every SAVE_EVERY iterations
                     partial_df = pd.concat([cache_df, pd.DataFrame(new_records)], ignore_index=True)
                     partial_df.to_parquet(TMDB_CACHE_PATH, index=False)
                     err_count = pd.DataFrame(new_records)["error"].notna().sum()
